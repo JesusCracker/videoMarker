@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <title>标注图片列表</title>
+    <style>
+        .layui-table-page .layui-laypage {
+            float: right;
+        }
+
+        .layui-table-cell {
+            height: 103px !important;
+            line-height: 103px !important;
+        }
+        .back{
+            display: none;
+        }
+    </style>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+
+</head>
+<body onload="IFrameResize()">
+
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-col-xs4">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;text-align: center;">
+                <div class="layui-input-block" style="margin-left:0;">
+                    <!--AI分析结果:1正常；2：故障  3：未标注 0或不传查全部-->
+                    <input type="radio" name="taskProgress" value="0" title="全部" lay-filter="taskProgress" checked>
+                    <input type="radio" name="taskProgress" value="1" lay-filter="taskProgress" title="正常">
+                    <input type="radio" name="taskProgress" value="2" lay-filter="taskProgress" title="故障">
+                    <input type="radio" name="taskProgress" value="3" lay-filter="taskProgress" title="未标注">
+                </div>
+
+            </div>
+        </div>
+        <div class="layui-col-xs1" style="margin-right: 30px;">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;">
+                <div class="layui-input-block" style="margin-left:0;">
+                    <input type="text" class="layui-input" id="col" placeholder="请输入列数" autocomplete="off">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="layui-col-xs1">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;">
+                <div class="layui-input-block" style="margin-left:0;">
+                    <input type="text" class="layui-input" id="row" placeholder="请输入行数" autocomplete="off">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-xs1" style="margin-bottom: 5px;margin-top: 5px;margin-left: 30%">
+            <div class="back layui-btn layui-btn-normal" onclick="window.history.go(-1)">返回</div>
+        </div>
+
+    </div>
+
+
+</form>
+
+<table class="layui-hide" id="taskList" lay-filter="taskList"></table>
+
+<script type="text/html" id="opreation">
+    {{#  if(d.aiResult == 0){ }}
+    <a class="layui-btn layui-btn-normal" lay-event="markImg"
+       style="display: block;margin-top:10px;margin-bottom: 10px;background-color: rgba(0, 204, 102, 1);">
+        <div class="circle2">
+            <span>标注图像</span>
+        </div>
+    </a>
+    {{#  } else { }}
+    <a class="layui-btn layui-btn-normal" lay-event="markImg"
+       style="display: block;margin-top:10px;margin-bottom: 10px;background-color: rgba(255, 153, 0, 1)">
+        <div class="circle2">
+            <span>重新标注</span>
+        </div>
+    </a>
+    {{#  } }}
+
+
+    <!--  <a class="layui-btn layui-btn-normal" lay-event="markImg"
+         style="display: block;margin-top:10px;margin-bottom: 10px;background-color: rgba(0, 204, 102, 1);">
+          <div class="circle2">
+              <span>标注图像</span>
+          </div>
+      </a>-->
+    <a class="layui-btn layui-btn-danger" lay-event="remove" style="margin-left:0;display: block;">
+        <div class="circle3">
+            <span>&nbsp&nbsp删&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp除&nbsp&nbsp&nbsp</span>
+        </div>
+    </a>
+
+</script>
+
+<script src="../js/config.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../layui/layui.all.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+<script>
+    var nowTime = new Date().valueOf();
+    var createDate = '', mainid = 0;
+
+    //截取url
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return decodeURI(r[2]);
+        return null; //返回参数值
+    }
+
+    if (getUrlParam('mainid')) {
+        mainid = getUrlParam('mainid');
+    }
+
+    if(getUrlParam('from')=='workBench'){
+        $('.back').show();
+    }else{
+        $('.back').hide();
+    }
+
+    //  时间格式化
+    function createTime(v, format) {
+        var date = new Date(v);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ("0" + d) : d;
+        var h = date.getHours();
+        h = h < 10 ? ("0" + h) : h;
+        var M = date.getMinutes();
+        M = M < 10 ? ("0" + M) : M;
+        var s = date.getSeconds();
+        if (s < 10)
+            s = '0' + s;
+        str = `${y}-${m}-${d} ${h}:${M}:${s}`;
+        if (format == 'y-m') {
+            str = `${y}-${m}`
+        } else if (format == 'y-m-d') {
+            str = `${y}-${m}-${d}`
+        } else if (format == 'h:m:s') {
+            str = `${h}:${M}:${s}`
+        }
+        return str;
+    }
+
+    function previewImg(obj) {
+        var img = new Image();
+        img.src = obj.src;
+        var height = img.height + 50; //获取图片高度
+        var width = img.width; //获取图片宽度
+        var imgHtml = "<img src='" + obj.src + "' />";
+        //弹出层
+        layer.open({
+            type: 1,
+            shade: 0.8,
+            offset: 'auto',
+            area: [width + 'px', height + 'px'],
+            shadeClose: true,//点击外围关闭弹窗
+            scrollbar: false,//不现实滚动条
+            title: "图像预览", //不显示标题
+            content: imgHtml, //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+            cancel: function () {
+                //layer.msg('捕获就是从页面已经存在的元素上，包裹layer的结构', { time: 5000, icon: 6 });
+            }
+        });
+    }
+
+    //将秒转成HH：MM：SS
+    _changeTimeBySecond = (second) => {
+        var hourTime = 0;
+        var minuteTime = 0;
+        var secondTime = 0;
+        if (second > 60) {  //如果秒数大于60
+            minuteTime = Math.floor(second / 60);
+            secondTime = Math.floor(second % 60);
+            if (minuteTime >= 60) {  //如果分钟大于60
+                hourTime = Math.floor(minuteTime / 60);
+                minuteTime = Math.floor(minuteTime % 60);
+            } else {
+                hourTime = 0;
+            }
+        } else {
+            hourTime = 0;
+            minuteTime = 0;
+            if (second == 60) {  //如果秒数等于60
+                minuteTime = 1;
+                secondTime = 0;
+            } else {
+                secondTime = second;
+            }
+        }
+        var timeResult = this._addZero(hourTime) + ':' + this._addZero(minuteTime) + ':' + this._addZero(secondTime);
+        return timeResult;
+    }
+
+    //补0
+    _addZero = (time) => {
+        let str = time;
+        if (time < 10) {
+            str = '0' + time;
+        }
+        return str;
+    }
+
+    //初筛，原始，标注图片
+    showImage = (imageUrl) => {
+        if (imageUrl) {
+            return `<img src=${imgUrl + imageUrl} onclick="previewImg(this)">`
+        }
+        else {
+            return `<span style="text-align: center">-</span>`
+        }
+
+    };
+
+    //AI分析结果
+    showResult = (resultNumber) => {
+        var result = '';
+        //AI分析结果:1正常；2：故障  3：未标注 0或不传查全部
+        if (resultNumber == 0) {
+            result = '-';
+        }
+        if (resultNumber == 1) {
+            result = `<span style="color: #3B8DF8;">正常</span>  `;
+        }
+        if (resultNumber == 2) {
+            result = `<span style="color: #ee4433;">故障</span>`;
+        }
+        if (resultNumber == 3) {
+            result = '未标注';
+        }
+        return result;
+    };
+
+    //显示分析故障比例
+    showRaito = (rotio) => {
+        if (rotio == 0) {
+            return '-';
+        }
+        else {
+            return `<span style="color: #ee4433">${rotio}%</span>`;
+        }
+    };
+
+    //删除截图
+    deleteScreenShot = (id) => {
+        $.ajax({
+            type: "post",
+            async: true,
+            url: publicUrl + '/videomana/imageDelete.do',
+            headers: {
+                'loginToken': loginToken
+            },
+            dataType: "json",
+            data: {
+                'id': id,
+            },
+            success: function (res) {
+                if (res.status == 1) {
+                    layer.msg('删除成功', {icon: 1, time: 1000}, function () {
+                        setTimeout('window.location.reload()', 1000);
+                    });
+                }
+                if (res.status == 2 && res.message == '权限错误') {
+                    parent_tuichu();
+                }
+                if (res.status == 2) {
+                    layer.msg(res.message);
+                }
+
+            },
+            error: function (res) {
+                layer.msg('服务器请求失败');
+            }
+        });
+    }
+
+    /*
+        window.onbeforeunload = function (e) {
+            alert('xxx');
+            // return e.returnValue = '确认关闭？！！';
+        }
+
+
+
+        function SetCookie(sName, sValue)
+        {
+            document.cookie = sName + "=" + escape(sValue) + ";";
+        }
+
+        window.onunload=winunload();
+
+        function winunload()
+        {
+            SetCookie('win1','closed');
+            // alert('xxx');
+        }
+    */
+
+
+    function IFrameResize() {
+      /*  var obj = parent.document.getElementById("external-frame"); //取得父页面IFrame对象
+        obj.height = this.document.body.scrollHeight;*/
+    }
+
+
+    layui.use(['table', 'laydate', 'form', 'layer'], function () {
+        var table = layui.table,
+            laydate = layui.laydate,
+            layer = layui.layer,
+            form = layui.form;
+
+
+        //初始化任务列表表格
+        table.render({
+            elem: '#taskList',
+            headers: {
+                'loginToken': loginToken
+            },
+            id: 'taskLists',
+            page: true,
+            limit: 4,
+            where: {'mainId': mainid},
+            limits: [4, 5, 10, 12, 15],
+            method: 'post',
+            url: publicUrl + '/videomana/imageList.do',
+            cols: [[
+                {field: 'colNo', unresize: true, align: "center", title: '列号', width: '5%'},
+                {field: 'rowNo', unresize: true, align: "center", title: '行号', width: '5%'},
+                {
+                    field: 'location',
+                    unresize: true,
+                    align: "center",
+                    title: '截图位置(时间戳)',
+                    width: '10%',
+                    templet: d => {
+                        return _changeTimeBySecond(d.location);
+
+                    }
+                },
+                {field: 'createUserId', unresize: true, align: "center", title: '标注人员', width: '10%'},
+                {
+                    field: 'createDate', unresize: true, align: "center", title: '标注时间', width: '10%', templet: d => {
+                        return createTime(d.createDate, 'y-m-d')
+                    }
+                },
+                {
+                    field: 'originalImg', unresize: true, align: "center", title: '原始图像', width: '10%', templet: d => {
+                        return showImage(d.originalImg);
+                    }
+                },
+                {
+                    field: 'screenImg', unresize: true, align: "center", title: '初筛图像', width: '10%', templet: d => {
+                        return showImage(d.screenImg);
+                    }
+                },
+                {
+                    field: 'markImg', unresize: true, align: "center", title: '标注图像', width: '10%', templet: d => {
+                        return showImage(d.markImg);
+                    }
+                },
+                {
+                    field: 'aiResult', unresize: true, align: "center", title: 'AI分析结果', width: '10%', templet: d => {
+                        return showResult(d.aiResult);
+                    }
+                },
+                {
+                    field: 'malfunctionRatio',
+                    unresize: true,
+                    align: "center",
+                    title: 'AI分析故障比例',
+                    width: '10%',
+                    templet: d => {
+                        return showRaito(d.malfunctionRatio);
+                    }
+                },
+                {unresize: true, align: "center", title: '操作', toolbar: '#opreation'}
+            ]],
+            parseData: function (res) {
+                if (res.status == 2 && res.message == '权限错误') {
+                    parent_tuichu()
+                }
+                var num = res.data.length;
+                var height = 113 * num + 4;
+                // console.log(height)
+                $(".layui-table-body").css("height", height + "px");
+                IFrameResize();
+                count = res.count;
+                var data = res.data;
+                var code = 0;
+                res.code = code;
+                res.count = res.dataTotal;
+                return res;
+            }
+        });
+
+
+        table.on('tool(taskList)', function (obj) {
+            var data = obj.data;
+            //标注，删除
+            if (obj.event === 'markImg') {
+                localStorage.setItem('thisIMGInfo',JSON.stringify(data));
+
+                //阻止tool上绑定的事件和tr上的点击事件冒泡
+                layui.stope(event);
+                layer.open({
+                    type: 2,
+                    area: ['100%', '100%'],
+                    title: false,
+                    closeBtn: false,
+                    content: `../annotation/draw.html`,
+                    btnAlign: "c",
+                    btn: "关闭",
+                    yes: function () {
+                        layer.closeAll();
+
+                    }
+                });
+
+            }
+            else if (obj.event === 'remove') {
+                layui.stope(event);
+
+                layer.open({
+                    shadeClose: true,//点击遮罩层关闭
+                    fixed: false, //不固定
+                    maxmin: false,//显示最大最小化按钮
+                    closeBtn: 0,
+                    zIndex: 9999,//层
+                    offset: 'auto',
+                    title: false,
+                    scrollbar: true,//显示滚动条
+                    shade: 0.4,//阴影
+                    btn: ["确认", "取消"],
+                    btnAlign: 'c',
+                    content: `确定删除该图片吗？`,
+                    yes: function (index, layero) {
+                        deleteScreenShot(data.id);
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
+                    }
+                });
+
+
+            }
+        });
+
+
+        //获取任务创建人列表
+        var taskOwnerList;
+        $.ajax({
+            type: "post",
+            async: true,
+            url: publicUrl + '/user/userList.do',
+            headers: {
+                'loginToken': loginToken
+            },
+            dataType: "json",
+            data: {
+                page: 1,
+                limit: 1000,
+
+            },
+            success: function (res) {
+                if (res.status == 1) {
+                    taskOwnerList = res.data;
+                    // console.log(taskOwnerList);
+
+                    //获取名称
+                    for (const item  of taskOwnerList) {
+                        $('.taskOwner').append(`<option value=${item.id}  >${item.name}</option>`);
+                    }
+                    form.render();
+
+                } else {
+                    layer.msg(res.message);
+
+                }
+            },
+            error: function (res) {
+                layer.msg('服务器请求失败');
+            }
+        });
+
+
+        var taskProgress = 0, col = 0, row = 0;
+
+        //重载任务列表表格
+        function tableReload() {
+            taskProgress = $("input[type='radio']:checked").val();
+            col = $("#col").val();
+            if (col == '') {
+                col = 0;
+            }
+            if (row == '') {
+                row = 0;
+            }
+            row = $("#row").val();
+
+
+
+            if (col != 0 && row == 0) {
+                table.reload('taskLists', {
+
+                    page: {curr: 1},
+                    elem: '#taskList',
+                    headers: {
+                        'loginToken': loginToken
+                    },
+
+                    where: {
+                        'colNo': col
+                    },
+                    method: 'post',
+                    url: publicUrl + '/videomana/imageList.do',
+                    parseData: function (res) {
+                        if (res.status == 2 && res.message == '权限错误') {
+                            parent_tuichu()
+                        }
+                        if (res.status == 1) {
+                            var num = res.data.length;
+                            var height = 113 * num + 4;
+
+                            $(".layui-table-body").css("height", height + "px");
+                            IFrameResize();
+                            count = res.count;
+                            var data = res.data;
+                            var code = 0;
+                            res.code = code;
+                            res.count = res.dataTotal;
+                            return res;
+                        }
+                        if (res.status == 3) {
+                            layer.msg(res.message);
+                            return false;
+                        }
+
+                    }
+                });
+                return false;
+            }
+
+            if (taskProgress && col != 0 && row != 0) {
+                table.reload('taskLists', {
+                    page: {curr: 1},
+                    elem: '#taskList',
+                    headers: {
+                        'loginToken': loginToken
+                    },
+                    where: {
+                        "aiResult": taskProgress,
+                        'colNo': col,
+                        'rowNo': row
+                    },
+                    method: 'post',
+                    url: publicUrl + '/videomana/imageList.do',
+                    parseData: function (res) {
+                        if (res.status == 2 && res.message == '权限错误') {
+                            parent_tuichu()
+                        }
+                        var num = res.data.length;
+                        var height = 113 * num + 4;
+
+                        $(".layui-table-body").css("height", height + "px");
+                        IFrameResize();
+                        count = res.count;
+                        var data = res.data;
+                        var code = 0;
+                        res.code = code;
+                        res.count = res.dataTotal;
+                        return res;
+                    }
+                });
+                return false;
+            }
+
+            if (col == 0 && row != 0) {
+                table.reload('taskLists', {
+
+                    page: {curr: 1},
+                    elem: '#taskList',
+                    headers: {
+                        'loginToken': loginToken
+                    },
+
+                    where: {
+                        'rowNo': row,
+                    },
+                    method: 'post',
+                    url: publicUrl + '/videomana/imageList.do',
+                    parseData: function (res) {
+                        if (res.status == 2 && res.message == '权限错误') {
+                            parent_tuichu()
+                        }
+                        if (res.status == 1) {
+                            var num = res.data.length;
+                            var height = 113 * num + 4;
+
+                            $(".layui-table-body").css("height", height + "px");
+                            IFrameResize();
+                            count = res.count;
+                            var data = res.data;
+                            var code = 0;
+                            res.code = code;
+                            res.count = res.dataTotal;
+                            return res;
+                        }
+                        if (res.status == 3) {
+                            layer.msg(res.message);
+                            return false;
+                        }
+
+                    }
+                });
+                return false;
+            }
+
+            if (col == 0 && row == 0) {
+                table.reload('taskLists', {
+                    page: {curr: 1},
+                    elem: '#taskList',
+                    headers: {
+                        'loginToken': loginToken
+                    },
+                    where: {
+                        'aiResult': taskProgress,
+                        'colNo': 0,
+                        'rowNo': 0,
+                    },
+                    method: 'post',
+                    url: publicUrl + '/videomana/imageList.do',
+                    parseData: function (res) {
+                        if (res.status == 2 && res.message == '权限错误') {
+                            parent_tuichu()
+                        }
+                        if (res.status == 1) {
+                            var num = res.data.length;
+                            var height = 113 * num + 4;
+
+                            $(".layui-table-body").css("height", height + "px");
+                            IFrameResize();
+                            count = res.count;
+                            var data = res.data;
+                            var code = 0;
+                            res.code = code;
+                            res.count = res.dataTotal;
+                            return res;
+                        }
+                        if (res.status == 3) {
+                            layer.msg(res.message);
+                            return false;
+                        }
+
+                    }
+                });
+                return false
+            }
+
+
+        }
+
+
+        //监听AI分析结果
+        form.on("radio(taskProgress)", function (data) {
+            tableReload();
+        });
+
+
+        //监听行数row
+        $("#row").bind('input propertychange', function () {
+            tableReload();
+        });
+
+
+        //监听列数col
+        $("#col").bind('input propertychange', function () {
+            tableReload();
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

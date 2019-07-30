@@ -1,0 +1,115 @@
+﻿*{
+    margin:0;
+    padding:0;
+}
+body{
+    background:initial;
+}
+.doctor_div {
+    background: white;
+    border-top: 1px solid #F1F4F5;
+    border-left: 1px solid #F1F4F5;
+    line-height: 50px;
+    font-size: 18px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(61,142,247,1);
+}
+.doctor_first{
+    margin-left:15px;
+}
+.doctor_li{
+    float:left;
+    width:25%;
+    margin-top:15px;
+}
+.yisheng {
+    margin: 0px 15px;
+    background: white;
+    border-radius: 5px;
+}
+.user{
+    height:180px;
+}
+.img{
+    float:left;
+    width:35%;
+}
+.img > img {
+    width: 90%;
+    margin: 15px 5%;
+    max-height:150px;
+}
+.info {
+    width: 65%;
+    float: left;
+}
+.info > p {
+    font-size: 22px;
+    font-family: PingFang-SC-Medium;
+    font-weight: 500;
+    color: rgba(55,71,79,1);
+    margin-top:45px;
+    margin-bottom:0px;
+}
+.info > span {
+    font-size: 14px;
+    font-family: PingFang-SC-Medium;
+    font-weight: 500;
+    color: rgba(68,68,68,1);
+    margin-top:10px;
+}
+.addr {
+    margin-top:25px;
+}
+.lie{
+    float:left;
+    width:33%;
+    text-align:center;
+    margin-bottom:20px;
+}
+.lie > span {
+    font-size: 14px;
+    font-family: PingFang-SC-Medium;
+    font-weight: 500;
+    color: rgba(68,68,68,1);
+}
+    .lie1 > p {
+        margin: 0px;
+        color: #FF7794;
+        font-size: 26px;
+        font-family: PingFang-SC-Medium;
+        font-weight: 500;
+    }
+.lie2 > p {
+    margin: 0px;
+    font-size: 26px;
+    font-family: PingFang-SC-Medium;
+    font-weight: 500;
+    color: rgba(62,142,247,1);
+}
+.time {
+    font-size: 26px !important;
+    font-family: PingFang-SC-Medium;
+    font-weight: 500 !important;
+    color: rgba(92,230,189,1) !important;
+}
+.layui-laypage a {
+    margin-right: 5px;
+}
+.layui-laypage .layui-laypage-curr {
+    margin-right: 5px;
+}
+.layui-laypage .layui-laypage-skip{
+    background:initial;
+}
+.layui-laypage .layui-laypage-count, .layui-laypage .layui-laypage-limits, .layui-laypage .layui-laypage-refresh, .layui-laypage .layui-laypage-skip {
+    background: initial;
+}
+#fenye {
+    text-align: right;
+    margin-right:15px;
+}
+.layui-laypage a:hover {
+    color: #3B8DF8;
+}

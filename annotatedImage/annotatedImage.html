@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>标注图片</title>
+    <style>
+        .layui-table-page .layui-laypage {
+            float: right;
+        }
+
+        .layui-table-cell {
+            height: 43px !important;
+            line-height: 43px !important;
+        }
+
+        .layui-form-radio > i:hover, .layui-form-radioed > i {
+            color: #1E9FFF !important;
+        }
+    </style>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+
+</head>
+<body onload="IFrameResize()">
+
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-col-xs5">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;">
+                <div class="layui-input-block" style="margin-left:0;">
+                    <label class="layui-form-label">任务完成进度</label>
+                    <input type="radio" name="taskProgress" value="0" title="全部" lay-filter="taskProgress" checked>
+                    <input type="radio" name="taskProgress" value="1" lay-filter="taskProgress" title="已完成">
+                    <input type="radio" name="taskProgress" value="2" lay-filter="taskProgress" title="未完成">
+                </div>
+
+            </div>
+        </div>
+        <div class="layui-col-xs1" style="margin-right: 30px;">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;">
+                <div class="layui-input-block" style="margin-left:0;">
+                    <input type="text" class="layui-input" id="dateChoose" placeholder="选择日期" autocomplete="off">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="layui-col-xs1">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;">
+                <div class="layui-input-block" style="margin-left:0;">
+
+                    <select name="taskOwner" lay-filter="taskOwner" class="taskOwner" lay-search>
+                        <option value="">选择人员</option>
+                    </select>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+<table class="layui-hide" id="taskList" lay-filter="taskList"></table>
+
+<script type="text/html" id="opreation">
+    <!--  <a class="layui-btn layui-btn-warm layui-btn-radius" lay-event="playVideo">
+          <div class="circle1">
+
+              <span class="circleTitle ">播放视频</span>
+          </div>
+      </a>-->
+    <a class="layui-btn layui-btn-radius" lay-event="seeDetail" style="background-color: rgba(0, 204, 102, 1);">
+        <div class="circle2">
+            <span>查看详情</span>
+        </div>
+    </a>
+    <a class="layui-btn layui-btn-danger layui-btn-radius" lay-event="remove">
+        <div class="circle3">
+            <span>删 除</span>
+        </div>
+    </a>
+
+    <a class="layui-btn layui-btn-normal layui-btn-radius" lay-event="previewResult">
+        <div class="circle3">
+            <span>预览结果</span>
+        </div>
+    </a>
+
+</script>
+
+<script src="../js/config.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../layui/layui.all.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+<script>
+    var nowTime = new Date().valueOf();
+    var createDate = '';
+
+    function IFrameResize() {
+        var obj = parent.document.getElementById("external-frame"); //取得父页面IFrame对象
+        obj.height = this.document.body.scrollHeight;
+    }
+
+    //  时间格式化
+    function createTime(v, format) {
+        var date = new Date(v);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ("0" + d) : d;
+        var h = date.getHours();
+        h = h < 10 ? ("0" + h) : h;
+        var M = date.getMinutes();
+        M = M < 10 ? ("0" + M) : M;
+        var s = date.getSeconds();
+        if (s < 10)
+            s = '0' + s;
+        str = `${y}-${m}-${d} ${h}:${M}:${s}`;
+        if (format == 'y-m') {
+            str = `${y}-${m}`
+        } else if (format == 'y-m-d') {
+            str = `${y}-${m}-${d}`
+        } else if (format == 'h:m:s') {
+            str = `${h}:${M}:${s}`
+        }
+        return str;
+    }
+
+
+    function showStatus(state) {
+        // 状态：1已完成 2未完成 全部不传或传0
+        var result = '';
+        if (state == 1) {
+            result = `<span style="color: #1E9FFF;font-weight: bold;">已完成</span>`
+        }
+        if (state == 2) {
+            result = `<span style="color: #ee4433;font-weight: bold;">未完成</span>`
+        }
+        return result;
+    }
+
+
+    deleteTask = (id) => {
+        $.ajax({
+            type: "post",
+            async: true,
+            url: publicUrl + '/videomana/taskDelete.do',
+            headers: {
+                'loginToken': loginToken
+            },
+            dataType: "json",
+            data: {
+                'id': id,
+            },
+            success: function (res) {
+                if (res.status == 1) {
+                    layer.msg('删除成功', {icon: 1, time: 1000}, function () {
+                        setTimeout('window.location.reload()', 1000);
+                    });
+                }
+                if (res.status == 2 && res.message == '权限错误') {
+                    parent_tuichu();
+                }
+                if (res.status == 2) {
+                    layer.msg(res.message);
+                }
+
+            },
+            error: function (res) {
+                layer.msg('服务器请求失败');
+            }
+        });
+    };
+
+    layui.use(['table', 'laydate', 'form'], function () {
+        var table = layui.table,
+            laydate = layui.laydate,
+            form = layui.form;
+
+
+        //初始化任务列表表格
+        table.render({
+            elem: '#taskList',
+            headers: {
+                'loginToken': loginToken
+            },
+            id: 'taskLists',
+            page: true,
+            limit: 10,
+            limits: [5, 10, 15, 20, 25],
+            method: 'post',
+            url: publicUrl + '/videomana/taskList.do',
+            cols: [[
+                {
+                    field: 'createDate',
+                    unresize: true,
+                    align: "center",
+                    title: '任务创建日期',
+                    width: '15%',
+                    templet: function (data) {
+                        return createTime(data.createDate, 'y-m-d');
+
+                    }
+                },
+                {field: 'createUserName', unresize: true, align: "center", title: '任务创建人', width: '10%'},
+                {field: 'taskName', unresize: true, align: "center", title: '任务名称', width: '10%'},
+                {field: 'folderName', unresize: true, align: "center", title: '文件夹路径', width: '15%'},
+                {
+                    field: 'taskStatus',
+                    unresize: true,
+                    align: "center",
+                    title: '状态',
+                    width: '10%',
+                    templet: function (data) {
+                        return showStatus(data.status);
+                    }
+                },
+                {unresize: true, align: "center", title: '操作', toolbar: '#opreation'}
+            ]],
+            parseData: function (res) {
+                if (res.status == 2 && res.message == '权限错误') {
+                    parent_tuichu()
+                }
+                var num = res.data.length;
+                var height = 54 * num + 6;
+                // console.log(height)
+                $(".layui-table-body").css("height", height + "px");
+                IFrameResize();
+                count = res.count;
+                var data = res.data;
+                var code = 0;
+                res.code = code;
+                res.count = res.dataTotal;
+                return res;
+            }
+        });
+
+
+        table.on('tool(taskList)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'playVideo') {
+                //阻止tool上绑定的事件和tr上的点击事件冒泡
+                layui.stope(event);
+                console.log(data);
+
+            }
+            else if (obj.event === 'seeDetail') {
+                //阻止tool上绑定的事件和tr上的点击事件冒泡
+                layui.stope(event);
+                location.href = `../annotationList/annotationList1.html?mainid=${data.id}`;
+
+            } else if (obj.event === 'remove') {
+                layui.stope(event);
+                layer.open({
+                    shadeClose: true,//点击遮罩层关闭
+                    fixed: false, //不固定
+                    maxmin: false,//显示最大最小化按钮
+                    closeBtn: 0,
+                    zIndex: 9999,//层
+                    offset: 'auto',
+                    title: false,
+                    scrollbar: true,//显示滚动条
+                    shade: 0.4,//阴影
+                    btn: ["确认", "取消"],
+                    btnAlign: 'c',
+                    content: `确定删除名称为${data.taskName}的任务吗？`,
+                    yes: function (index, layero) {
+                        deleteTask(data.id);
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
+                    }
+                });
+
+            }
+            else if (obj.event === 'previewResult') {
+                layui.stope(event);
+
+                window.open(`../vision/tunnelView.html?taskID=${data.id}&taskName=${data.taskName}`);
+
+            }
+        });
+
+        // 选择时间控件
+        laydate.render({
+            trigger: 'click',
+            elem: '#dateChoose',
+            max: nowTime,
+            done: function (value, date, endDate) {
+                createDate = value;
+                $("#dateChoose").val(value);
+                // console.log(createDate);
+                tableReload();
+            }
+
+        });
+
+
+        //获取任务创建人列表
+        var taskOwnerList;
+        $.ajax({
+            type: "post",
+            async: true,
+            url: publicUrl + '/user/userList.do',
+            headers: {
+                'loginToken': loginToken
+            },
+            dataType: "json",
+            data: {
+                page: 1,
+                limit: 1000,
+            },
+            success: function (res) {
+                if (res.status == 1) {
+                    taskOwnerList = res.data;
+
+                    //获取名称
+                    for (let item  of taskOwnerList) {
+                        $('.taskOwner').append(`<option value=${item.id}  >${item.name}</option>`);
+                    }
+                    form.render();
+
+                } else {
+                    layer.msg(res.message);
+
+                }
+            },
+            error: function (res) {
+                layer.msg('服务器请求失败');
+            }
+        });
+
+
+        //重载任务列表表格
+        function tableReload() {
+            var taskProgress = $("input[type='radio']:checked").val();
+            var taskOwner = $("select[name=taskOwner]").val();
+            var createDate = $("#dateChoose").val();
+            console.log(taskProgress,taskOwner,createDate);
+
+
+            if (taskProgress && taskOwner != '' && createDate != '') {
+                table.reload('taskLists', {
+
+                    page: {curr: 1},
+                    elem: '#taskList',
+                    headers: {
+                        'loginToken': loginToken
+                    },
+
+                    where: {
+                        'status': taskProgress,
+                        'createUserId': taskOwner,
+                        'createDateF': createDate
+                    },
+                    method: 'post',
+                    url: publicUrl + '/videomana/taskList.do',
+                    parseData: function (res) {
+                        if (res.status == 2 && res.message == '权限错误') {
+                            parent_tuichu()
+                        }
+                        if (res.status == 1) {
+                            var num = res.data.length;
+                            var height = 54 * num + 6;
+
+                            $(".layui-table-body").css("height", height + "px");
+                            IFrameResize();
+                            count = res.count;
+                            var data = res.data;
+                            var code = 0;
+                            res.code = code;
+                            res.count = res.dataTotal;
+                            return res;
+                        }
+                        if (res.status == 3) {
+                            layer.msg(res.message);
+                            return false;
+                        }
+
+                    }
+                });
+            }
+            if (taskProgress && taskOwner != '' && createDate == '') {
+                table.reload('taskLists', {
+
+                    page: {curr: 1},
+                    elem: '#taskList',
+                    headers: {
+                        'loginToken': loginToken
+                    },
+
+                    where: {
+
+                        'createUserId': taskOwner,
+                        'status': taskProgress,
+
+                    },
+                    method: 'post',
+                    url: publicUrl + '/videomana/taskList.do',
+                    parseData: function (res) {
+                        if (res.status == 2 && res.message == '权限错误') {
+                            parent_tuichu()
+                        }
+                        if (res.status == 1) {
+                            var num = res.data.length;
+                            var height = 54 * num + 6;
+
+                            $(".layui-table-body").css("height", height + "px");
+                            IFrameResize();
+                            count = res.count;
+                            var data = res.data;
+                            var code = 0;
+                            res.code = code;
+                            res.count = res.dataTotal;
+                            return res;
+                        }
+                        if (res.status == 3) {
+                            layer.msg(res.message);
+                            return false;
+                        }
+
+                    }
+                });
+            }
+            if (taskProgress && createDate != '' && taskOwner == '') {
+
+                table.reload('taskLists', {
+
+                    page: {curr: 1},
+                    elem: '#taskList',
+                    headers: {
+                        'loginToken': loginToken
+                    },
+
+                    where: {
+                        'createDateF': createDate,
+                        'status': taskProgress,
+                    },
+                    method: 'post',
+                    url: publicUrl + '/videomana/taskList.do',
+                    parseData: function (res) {
+                        if (res.status == 2 && res.message == '权限错误') {
+                            parent_tuichu()
+                        }
+                        if (res.status == 1) {
+                            var num = res.data.length;
+                            var height = 54 * num + 6;
+
+                            $(".layui-table-body").css("height", height + "px");
+                            IFrameResize();
+                            count = res.count;
+                            var data = res.data;
+                            var code = 0;
+                            res.code = code;
+                            res.count = res.dataTotal;
+                            return res;
+                        }
+                        if (res.status == 3) {
+                            layer.msg(res.message);
+                            return false;
+                        }
+
+                    }
+                });
+            }
+            if (taskProgress && createDate == '' && taskOwner == '') {
+
+                table.reload('taskLists', {
+
+                    page: {curr: 1},
+                    elem: '#taskList',
+                    headers: {
+                        'loginToken': loginToken
+                    },
+
+                    where: {
+                        'status': taskProgress,
+                        'createDateF':'',
+                    },
+                    method: 'post',
+                    url: publicUrl + '/videomana/taskList.do',
+                    parseData: function (res) {
+                        if (res.status == 2 && res.message == '权限错误') {
+                            parent_tuichu()
+                        }
+                        if (res.status == 1) {
+                            var num = res.data.length;
+                            var height = 54 * num + 6;
+
+                            $(".layui-table-body").css("height", height + "px");
+                            IFrameResize();
+                            count = res.count;
+                            var data = res.data;
+                            var code = 0;
+                            res.code = code;
+                            res.count = res.dataTotal;
+                            return res;
+                        }
+                        if (res.status == 3) {
+                            layer.msg(res.message);
+                            return false;
+                        }
+
+                    }
+                });
+            }
+        }
+
+        //监听任务完成进度选项
+        form.on("radio(taskProgress)", function (data) {
+            //全部，已完成，未完成
+            // var taskProgress = data.value;
+            tableReload();
+        });
+
+        //监听任务创建人下拉选项
+        form.on('select(taskOwner)', function (data) {
+            // var owner=data.value;
+            tableReload();
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

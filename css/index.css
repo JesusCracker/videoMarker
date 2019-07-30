@@ -1,0 +1,145 @@
+﻿*{
+    margin:0;
+    padding:0;
+}
+.title{
+    right:200px;
+    height:60px;
+    line-height:60px;
+    text-align:center;
+}
+.title > span {
+    font-size: 18px;
+    color: rgba(62,142,247,1);
+}
+#left_ul{
+    margin:0px 40px 0px 20px;
+}
+.left_li {
+    height: 50px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(238,238,238,1);
+    box-shadow: 0px 1px 10px 0px rgba(69,125,219,0.13);
+    text-align: center;
+    line-height: 50px;
+    font-size: 14px;
+    color: rgba(55,71,79,1);
+    cursor: pointer;
+}
+.left_li > a{
+    color:white;
+}
+.active {
+    background: rgba(62,142,247,1);
+    color: white;
+}
+.type1 {
+    margin: 0px;
+    border-top: 1px solid #F1F4F5;
+    border-left: 1px solid #F1F4F5;
+    background: rgba(255,255,255,1);
+    position:fixed;
+    width:100%;
+}
+.type {
+    width: 120px;
+    float: left;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 18px;
+}
+.iframe {
+    margin: 65px 15px 0px 15px;
+}
+iframe {
+    width:100%;
+    border:none;
+    min-height:100%;
+}
+.layui-header {
+    background: rgba(255,255,255,1) !important;
+}
+.active1 {
+    font-size: 18px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(62,142,247,1);
+    position:relative;
+}
+.active1 > div {
+    height: 2px;
+    background: #3E8EF7;
+    position: absolute;
+    bottom: 0px;
+    width: 50px;
+    margin-left: 35px;
+}
+
+.layui-body {
+    background: rgba(241,244,245,1);
+}
+.layui-layout-admin .layui-body{
+    bottom:0;
+}
+#n-names{
+    color:#ccc;
+}
+.layui-nav .layui-nav-more {
+    border-top-color: #ccc;
+}
+.layui-nav .layui-nav-mored, .layui-nav-itemed > a .layui-nav-more {
+    border-color: transparent transparent #ccc;
+}
+dl>dd {
+    padding: 10px;
+    text-align: center;
+    color: black;
+}
+dl>dd:hover {
+    background-color: #CCCCCC;
+    cursor: pointer;
+}
+
+.modal-title{
+    font-size: 18px;
+}
+.modal-password{
+    width: 70%;
+    margin-left: 15%;
+    margin-bottom: 15px;
+}
+.control-label{
+    width: 80px;
+    float: left;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 34px;
+}
+.modal-npass{
+    margin-left: 90px;
+}
+.form-control{
+    border: 1px solid #ccc;
+    box-shadow: none;
+    border-radius: 2px;
+}
+.form-control:focus{
+    border: 1px solid #ccc;
+    box-shadow: none;
+    border-radius: 2px;
+}
+.btn-default{
+    width: 100px;
+    background-color: #fff !important;
+    border-color: #ccc !important;
+    outline:none !important;
+    outline-offset:0 !important;
+}
+.btn-info{
+    background: rgba(59,141,248,1) !important;
+    border-color: rgba(59,141,248,1) !important;
+    width: 100px;
+    outline:none !important;
+    outline-offset:0 !important;
+}

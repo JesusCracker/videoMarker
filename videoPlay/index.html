@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../css/video-js.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <style>
+        body {
+            background-color: #191919
+        }
+
+        .m {
+            width: 960px;
+            height: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 100px;
+        }
+
+        .hideFileBtn {
+            opacity: 0;
+            width: 50px;
+            display: inline;
+        }
+        .layui-fluid{
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="layui-fluid" id="screenHeight" style="padding: 0!important;">
+
+    <div class="layui-row" style="height: 100%">
+        <div class="layui-col-xs4" style="height: 100%;">
+
+            <div class="layui-row" style="height:  33.3333%;">
+                <div class="layui-col-xs12" style="height: 100%;background-image: url(../img/videoPause.png);
+    background-repeat: no-repeat;
+    background-position: 50%;
+   background-size: auto 100%;">
+                    <!--video1-->
+                    <div class="video1 videos">
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="layui-row" style="height:  33.3333%;">
+                <div class="layui-col-xs12" style="height: 100%;background-image: url(../img/videoPause.png);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: auto 100%;">
+                    <!--video2-->
+                    <div class="video2 videos">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-row" style="height:  33.3333%;">
+                <div class="layui-col-xs12" style="height: 100%;background-image: url(../img/videoPause.png);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: auto 100%;">
+                    <!--video3-->
+                    <div class="video3 videos">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="layui-col-xs4" style="height: 100%;">
+
+            <div class="layui-row" style="height:  33.3333%;">
+                <div class="layui-col-xs12" style="height: 100%;background-image: url(../img/videoPause.png);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: auto 100%;">
+                    <!--video4-->
+                    <div class="video4 videos">
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="layui-row" style="height:  33.3333%;">
+                <div class="layui-col-xs12" style="height: 100%;background-image: url(../img/videoPause.png);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: auto 100%;">
+                    <!--video5-->
+                    <div class="video5 videos">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-row" style="height:  33.3333%;">
+                <div class="layui-col-xs12" style="height: 100%;background-image: url(../img/videoPause.png);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: auto 100%;">
+                    <!--video6-->
+                    <div class="video6 videos">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="layui-col-xs4" style="height: 100%;">
+            <div class="layui-row" style="height:  33.3333%;">
+                <div class="layui-col-xs12" style="height: 100%;background-image: url(../img/videoPause.png);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: auto 100%;">
+                    <!--video7-->
+                    <div class="video7 videos">
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="layui-row" style="height:  33.3333%;">
+                <div class="layui-col-xs12" style="height: 100%;background-image: url(../img/videoPause.png);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: auto 100%;">
+                    <!--video8-->
+                    <div class="video8 videos">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-row" style="height:  33.3333%;">
+                <div class="layui-col-xs12" style="height: 100%;background-image: url(../img/videoPause.png);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: auto 100%;">
+                    <!--video9-->
+                    <div class="video9 videos">
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+    <div class="layui-row toolBar"
+         style=" justify-content: center;height: 8%;background-color: #fff; text-align: center;display: flex;align-items: center;">
+        <i class="layui-icon layui-icon-list chooseVideo"
+           style="font-size: 50px; color: #191919;font-weight: bold;margin-right: 50px; position: relative;    display: flex;">
+            <input id=b type=file webkitdirectory class="hideFileBtn" style="position: absolute;" title="请选择视频文件">
+        </i>
+
+    </div>
+
+</div>
+
+
+<!--<div class="m"></div>-->
+
+
+<script src="../js/jquery.min.js"></script>
+<script src="../layui/layui.all.js"></script>
+<script src="../js/video7.5.5/js/video.min.js"></script>
+
+<script>
+
+    var folderName='';
+    var screenHeight = 0;
+
+    screenHeight = document.documentElement.clientHeight;
+    // console.log(screenHeight);
+    if (screenHeight > 0) {
+        $('#screenHeight').attr('style', `height:${screenHeight}px`);
+    }
+
+
+    var videoCollection = [], blobb = [];
+
+    document.querySelector('#b').addEventListener('change', e => {
+        $('.toolBar').hide();
+
+        var vdo = e.target;
+        var totalPath=vdo.files[0].webkitRelativePath;
+        var vdoName = vdo.files[0].name;
+        //截取字符串
+        var start = totalPath.indexOf(vdoName);
+        folderName = totalPath.substring(0,start).split('/')[0];
+
+
+        /*   for (let entry of e.target.files){
+               console.log(entry.name, entry.webkitRelativePath);
+           }*/
+
+        for (let i = 0; i < e.target.files.length; i++) {
+            videoCollection.push(e.target.files[i].webkitRelativePath);
+            blobb.push(window.URL.createObjectURL(e.target.files[i]));
+        }
+
+        var str = '';
+        //获取5个视频
+        /*     for (let i = 0; i < videoCollection.length; i++) {
+                 str = `<video id="my-video${i}" class="video-js" controls preload="auto" width="360" height="120" data-setup="{}">
+                 <source src=${blobb[i]} type="video/mp4">
+                 <p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
+             </video>`;
+             }*/
+
+        $('.video1').append(`<video id="my-video0" class="video-js" controls preload="auto" style="width：100%;object-fit: fill;"   data-setup="{}" loop='true'>
+			<source src=${blobb[0]} type="video/webm" >
+			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
+		</video>`);
+        $('.video2').append(`<video id="my-video1" class="video-js"  controls preload="auto" style="width：100%;object-fit: fill;"  data-setup="{}" loop='true'>
+			<source src=${blobb[1]} type="video/mp4">
+			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
+		</video>`);
+        $('.video3').append(`<video id="my-video2" class="video-js" style="width：100%;object-fit: fill;"  controls preload="auto"  data-setup="{}" loop='true'>
+			<source src=${blobb[2]} type="video/mp4">
+			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
+		</video>`);
+        $('.video4').append(`<video id="my-video3" class="video-js" controls preload="auto" style="width：100%;object-fit: fill;" data-setup="{}" loop='true'>
+			<source src=${blobb[3]} type="video/mp4">
+			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
+		</video>`);
+        $('.video5').append(`<video id="my-video4" class="video-js" controls preload="auto" style="width：100%;object-fit: fill;" data-setup="{}" loop='true'>
+			<source src=${blobb[4]} type="video/mp4">
+			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
+		</video>`);
+        $('.video6').append(`<video id="my-video5" class="video-js" controls preload="auto" style="width：100%;object-fit: fill;"  data-setup="{}" loop='true'>
+			<source src=${blobb[5]} type="video/mp4">
+			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
+		</video>`);
+        $('.video7').append(`<video id="my-video6" class="video-js" controls preload="auto" style="width：100%;object-fit: fill;"  data-setup="{}" loop='true'>
+			<source src=${blobb[6]} type="video/mp4">
+			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
+		</video>`);
+        $('.video8').append(`<video id="my-video7" class="video-js" controls preload="auto" style="width：100%;object-fit: fill;"  data-setup="{}" loop='true'>
+			<source src=${blobb[7]} type="video/mp4">
+			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
+		</video>`);
+        $('.video9').append(`<video id="my-video8" class="video-js" controls preload="auto" style="width：100%;object-fit: fill;"  data-setup="{}" loop='true'>
+			<source src=${blobb[8]} type="video/mp4" >
+			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
+		</video>`);
+
+        $('#my-video0').css('height', screenHeight *  0.87 * 0.383 + 'px').css('width', '100%');
+        $('#my-video1').css('height', screenHeight * 0.87 * 0.383 + 'px').css('width', '100%');
+        $('#my-video2').css('height', screenHeight * 0.87 * 0.383 + 'px').css('width', '100%');
+        $('#my-video3').css('height', screenHeight * 0.87 * 0.383+ 'px').css('width', '100%');
+        $('#my-video4').css('height', screenHeight * 0.87 * 0.383+ 'px').css('width', '100%');
+        $('#my-video5').css('height', screenHeight * 0.87 * 0.383 + 'px').css('width', '100%');
+        $('#my-video6').css('height', screenHeight * 0.87 * 0.383+ 'px').css('width', '100%');
+        $('#my-video7').css('height', screenHeight * 0.87 * 0.383 + 'px').css('width', '100%');
+        $('#my-video8').css('height', screenHeight * 0.87 * 0.383 + 'px').css('width', '100%');
+
+
+        //	监听播放时间
+        /*
+        var video0 = document.getElementById('my-video0');
+        var video1 = document.getElementById('my-video1');
+        var video2 = document.getElementById('my-video2');
+        var video3 = document.getElementById('my-video3');
+        var video4 = document.getElementById('my-video4');
+        var video5 = document.getElementById('my-video5');
+        var video6 = document.getElementById('my-video6');
+        var video7 = document.getElementById('my-video7');
+        var video8 = document.getElementById('my-video8');
+        //	播放
+        video0.addEventListener('play', function () {
+            video1.play();
+            video2.play();
+            video3.play();
+            video4.play();
+            video5.play();
+            video6.play();
+            video7.play();
+            video8.play();
+        });
+        //	暂停
+        video0.addEventListener('pause', function () {
+            video1.pause();
+            video2.pause();
+            video3.pause();
+            video4.pause();
+            video5.pause();
+            video6.pause();
+            video7.pause();
+            video8.pause();
+            var timeDisplay = Math.floor(video0.currentTime);
+            localStorage.setItem('screenShot',timeDisplay);
+
+        });
+        //
+        document.onmouseup = function () {
+            video1.currentTime = video0.currentTime;
+            video2.currentTime = video0.currentTime;
+            video3.currentTime = video0.currentTime;
+            video4.currentTime = video0.currentTime;
+            video5.currentTime = video0.currentTime;
+            video6.currentTime = video0.currentTime;
+            video7.currentTime = video0.currentTime;
+            video8.currentTime = video0.currentTime;
+        }*/
+
+    });
+
+
+</script>
+</body>
+</html>
+
+

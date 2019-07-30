@@ -1,0 +1,143 @@
+﻿*{
+    margin:0;
+    padding:0;
+}
+.warp{
+    /*margin:0px 15px;*/
+}
+.left {
+    width: 33%;
+    float: left;
+}
+.right{
+    width:67%;
+    float:left;
+}
+.mianji {
+    margin-left: 15px;
+    margin-top: 20px;
+    background: white;
+    border-radius: 4px;
+}
+.yp_time{
+    float:left;
+    width:30%;
+}
+.mianji_ech{
+    width:70%;
+    float:left;
+}
+.yp_tit {
+    font-size: 18px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(55,71,79,1);
+    margin-top:25px;
+    margin-left:10px;
+    margin-bottom:30px;
+    display:block;
+}
+.time {
+    font-size: 30px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(51,51,51,1);
+    margin-left:10px;
+}
+.time_dw {
+    font-size: 14px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(51,51,51,1);
+}
+#bingtu_echarts {
+    margin-top: 30px;
+}
+.bing {
+    position:relative;
+    margin-left: 15px;
+    margin-top: 20px;
+    height: 220px;
+    background: rgba(255,255,255,1);
+    border-radius: 4px;
+}
+.bing_tit {
+    position: absolute;
+    z-index: 2;
+    margin-top: 25px;
+    margin-left: 15px;
+    font-size: 18px;
+    color: rgba(55,71,79,1);
+}
+.huan {
+    position: relative;
+    margin-left: 15px;
+    margin-top: 20px;
+    height: 250px;
+    background: rgba(255,255,255,1);
+    border-radius: 4px;
+}
+.fenji_zhanbi {
+    position: absolute;
+    top: 25px;
+    left: 10px;
+}
+.huan_tit {
+    font-size: 18px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(55,71,79,1);
+}
+.fenji_zhanbi_div {
+    font-size: 12px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(153,153,153,1);
+}
+.fenji_12 {
+    color: rgba(92,230,189,1);
+    margin-left:10px;
+}
+.fenji_30 {
+    color: rgba(59,141,248,1);
+    margin-left: 10px;
+}
+.fenji_45 {
+    color: rgba(255,119,148,1);
+    margin-left: 10px;
+}
+.zong {
+    height: 400px;
+    background: rgba(255,255,255,1);
+    border-radius: 4px;
+    margin:20px 15px 0px 15px;
+}
+.zhu{
+    float:left;
+    width:60%;
+    height:400px;
+}
+.yuan {
+    float: left;
+    width: 40%;
+    height: 400px;
+}
+.fenji {
+    height: 250px;
+    background: rgba(255,255,255,1);
+    border-radius: 4px;
+    margin: 20px 15px 0px 15px;
+}
+.yanshi{
+    margin:30px 0px;
+    text-align:center;
+}
+.butt {
+    width: 300px;
+    height: 50px;
+    background: rgba(58,141,247,1);
+    border-radius: 4px;
+    border: none;
+    color: white;
+    font-size: 18px;
+}

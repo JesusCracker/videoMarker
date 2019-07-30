@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>修改密码</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+    <!--<link rel="stylesheet" href="../css/font-awesome.min.css">-->
+    <!--<link rel="stylesheet" href="../css/cropper.css">-->
+    <!--<link rel="stylesheet" href="../css/sitelogo.css">-->
+
+
+    <style>
+        .layui-form-radio > i:hover, .layui-form-radioed > i {
+            color: #1E9FFF;
+        }
+
+        .red {
+            color: #e43;
+        }
+
+        .layui-form-item {
+            margin-bottom: 40px;
+            clear: both;
+        }
+
+        .btns {
+            width: 200px;
+            margin: 0 auto;
+        }
+
+        .headIco {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #eee;
+            float: left;
+            margin-right: 3%;
+            margin-bottom: 60px;
+            position: relative
+        }
+
+        .signIco {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #eee;
+            float: left;
+            margin-right: 3%;
+            position: relative;
+        }
+
+        .chooseItems {
+            margin: 0 auto;
+            width: 325px;
+            margin-bottom: 4px;
+        }
+
+        .ModalBtns {
+            width: 200px;
+            margin: 0 auto;
+            margin-top: 15px;
+        }
+
+        .layui-form-label {
+            width: 110px;
+        }
+
+        .layui-form-item .layui-input-inline {
+            float: left;
+            width: 19rem;
+            margin-right: 10px;
+        }
+
+        .layui-select-title {
+            width: 19.5rem
+        }
+    </style>
+</head>
+<body onload="IFrameResize()">
+
+<div class="layui-fluid">
+    <div class="layui-card" style="    margin-top: 50px;">
+        <div class="layui-card-body">
+
+            <div class="layui-row">
+                <div class="layui-col-xs12">
+                    <form class="layui-form" action="" lay-filter="component-form-group" style="float: left;    width: 100%;">
+
+                        <div class="layui-form-item">
+                            <div class="layui-inline" style="width: 48%;">
+                                <label class="layui-form-label">旧密码 <span class="red">*</span> </label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="number" autocomplete="off" class="layui-input oldPWD">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">新密码 <span class="red">*</span> </label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="number" autocomplete="off" class="layui-input newPWD">
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+                <!--  <div class="layui-col-xs4">
+                      <div class="headIco">
+                          <img class="headIcon" src="" alt="" style="width: 100%;height: 100%;">
+                          <span style="color: #eeeeee;    display: block;margin-top: -70%;margin-left: 30%;">上传头像</span>
+
+                          &lt;!&ndash;<button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#avatar-modal" style="margin: 10px;">修改头像</button>&ndash;&gt;
+                          <button style="position:absolute;bottom:0;width: 100%;    margin-bottom: -40px;" type="button"
+                                  class="layui-btn layui-btn-warm" data-toggle="modal" data-target="#avatar-modal">上传头像
+                          </button>
+
+                      </div>
+                  </div>-->
+            </div>
+            <div style='clear:both;'></div>
+        </div>
+
+
+        <div class="btns">
+            <button class="layui-btn layui-btn-normal save layui-btn-radius">确认修改</button>
+            <button class="layui-btn layui-btn-normal cancel layui-btn-radius" onclick="window.history.go(-1)">取&nbsp&nbsp&nbsp&nbsp消</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="loading" aria-label="Loading" role="img" tabindex="-1"></div>
+
+<script src="../js/config.js"></script>
+<script src="../js/jquery.min.js"></script>
+<!--<script src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>-->
+<!--<script src="../js/sitelogo.js"></script>-->
+<!--<script src="../../layuiadmin/plugs/cropper/sitelogo1.js"></script>-->
+<script src="../js/bootstrap.min.js"></script>
+<script src="../layui/layui.js"></script>
+<script src="../js/html2canvas.js" type="text/javascript" charset="utf-8"></script>
+<!--<script src="../js/cropper.js"></script>-->
+
+
+<script>
+
+    function IFrameResize() {
+        var obj = parent.document.getElementById("external-frame"); //取得父页面IFrame对象
+        obj.height = this.document.body.scrollHeight;
+    }
+
+
+    layui.config({
+        version: true,
+        base: '../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use([ 'form', 'laydate', 'jquery'], function () {
+        var $ = layui.$
+
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , form = layui.form
+            , $ = layui.jquery
+            , date = new Date();
+
+        form.render(null, 'component-form-group');
+
+
+        var chooseDate;
+        var headicon = '', signature = '';
+        var nowTime = new Date().valueOf();
+        laydate.render({
+            elem: '#LAY-component-form-group-date',
+            max: nowTime,
+            done: function (value, date, endDate) {
+                chooseDate = value;
+            }
+
+        });
+
+
+        /* 自定义验证规则 */
+        form.verify({
+            required: [/[\S]+/, "必填项不能为空"],
+            phone: [/^[1][3,4,5,7,8][0-9]{9}$/, "请输入正确的手机号"],
+            email: [/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/, "邮箱格式不正确"],
+            url: [/(^#)|(^http(s*):\/\/[^\s]+\.[^\s]+)/, "链接格式不正确"],
+            number: function (e) {
+                if (!e || isNaN(e)) return "只能填写数字"
+            },
+            date: [/^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))*$/, "日期格式不正确"],
+            identity: [/(^\d{15}$)|(^\d{17}(x|X|\d)$)/, "请输入正确的身份证号"]
+        });
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            parent.layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+            })
+            return false;
+        });
+
+
+
+
+        //监听状态
+        var userStatus = 1;
+        form.on('select(userStatus)', function (data) {
+            userStatus = data.value;
+
+        });
+
+
+
+
+
+        //获取角色列表
+        var roleList, roleID = [], roleNumber = '';
+
+
+        //返回
+        $('.cancelRole').click(function () {
+            layer.close(layer.index);
+        });
+
+
+        var reg = {
+            required: /[\S]+/,
+            phone: /^[1][3,4,5,7,8][0-9]{9}$/,
+            email: /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
+            url: /(^#)|(^http(s*):\/\/[^\s]+\.[^\s]+)/,
+            number: function (e) {
+                if (!e || isNaN(e)) return "只能填写数字"
+            },
+            date: /^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))*$/,
+            identity: /(^\d{15}$)|(^\d{17}(x|X|\d)$)/
+        };
+
+
+        function checkPhone(phone) {
+            if (!(/^1[3456789]\d{9}$/.test(phone))) {
+                return '手机号码有误，请重填';
+            }
+            return true;
+        }
+
+        //监听手机号码
+
+        $(".phoneNum").bind("input propertychange", function (event) {
+            if (this.value.length == 11) {
+                if (checkPhone(this.value) != true) {
+                    layer.msg(checkPhone(this.value), {icon: 5, time: 2000});
+
+                    $('.phoneNum').val('');
+                    this.value = '';
+                }
+            }
+
+        });
+        var gender = '';
+        form.on('radio(sex)', function (data) {
+            gender = data.value;
+        });
+
+        var isPublicConsultation = 2;
+        form.on('radio(isPublicConsultation)', function (data) {
+            isPublicConsultation = data.value;
+        });
+
+        //提交页面表单数据
+        $('.save').click(function () {
+
+            var oldPWD = $('.oldPWD').val();
+            var newPWD = $('.newPWD').val();
+
+
+
+            //提交表单数据
+            var params = {
+                'password':oldPWD,
+                'newPassWord': newPWD,
+            };
+
+
+            $.ajax({
+                contentType: 'application/json',
+                type: "post",
+                async: true,
+                url: publicUrl + '/user/editPassWord.do',
+                headers: {
+                    'loginToken': loginToken
+                },
+                dataType: "json",
+                data: JSON.stringify(params),
+                success: function (res) {
+                    if (res.status == 1) {
+                        layer.msg('修改成功', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            localStorage.clear();
+
+                            if (window != top) {
+                                top.location.href = '../login.html';
+                            }
+
+                        });
+
+
+                    } else {
+                        layer.msg(res.message);
+                    }
+                },
+                error: function (res) {
+                    layer.msg('服务器请求失败');
+                }
+            });
+
+        });
+
+
+    });
+
+
+</script>
+</body>
+</html>

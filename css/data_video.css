@@ -1,0 +1,350 @@
+﻿body{
+    background:initial;
+}
+.data_video_body{
+    margin:15px;
+}
+.layui-ypnumber {
+    float: left;
+    width: 24%;
+    height: 180px;
+    background: rgba(255,255,255,1);
+    box-shadow: 0px 3px 29px 0px rgba(0, 0, 0, 0.04);
+    border-radius: 4px;
+}
+.shaicha_left {
+    width: 50%;
+    height: 180px;
+    float:left;
+    position: relative;
+}
+.fense {
+    width: 80%;
+    height: 0;
+    padding-bottom: 80%;
+    background: rgba(255,119,148,1);
+    border-radius: 4px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.fense > img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.shaicha_right {
+    width: 50%;
+    height: 180px;
+    float: left;
+    position: relative;
+}
+.shaicha_div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height: 60px;
+    text-align: center;
+}
+.shaicha_div > p {
+    font-size: 25px;
+    margin:0px;
+    font-family: MicrosoftYaHei-Bold;
+    font-weight: bold;
+    color: rgba(153,153,153,1);
+}
+.shaicha_div > span {
+    font-size: 16px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(55,71,79,1);
+}
+.layui-ypnumber2 {
+    margin-left: 1.25%;
+    float: left;
+    width: 24%;
+    height: 180px;
+    background: rgba(255,255,255,1);
+    box-shadow: 0px 3px 29px 0px rgba(0, 0, 0, 0.04);
+    border-radius: 4px;
+}
+.layui-ypnumber3 {
+    margin-left: 1.25%;
+    float: left;
+    width: 24%;
+    height: 180px;
+    background: rgba(255,255,255,1);
+    box-shadow: 0px 3px 29px 0px rgba(0, 0, 0, 0.04);
+    border-radius: 4px;
+}
+.layui-ypnumber4 {
+    margin-left: 1.25%;
+    float: left;
+    width: 24%;
+    height: 180px;
+    background: rgba(255,255,255,1);
+    box-shadow: 0px 3px 29px 0px rgba(0, 0, 0, 0.04);
+    border-radius: 4px;
+}
+
+.clear {
+    float: right;
+    margin-left: 15px;
+    width: 100px;
+    height: 38px;
+    background: rgba(255,119,148,1) !important;
+    border-radius: 2px;
+    text-align: center;
+}
+.daochu {
+    float: right;
+    margin-left: 15px;
+    width: 100px;
+    height: 38px;
+    background: #7ed57a !important;
+    border-radius: 2px;
+    text-align: center;
+}
+.sousuo {
+    float: right;
+    padding: 0;
+    width: 43px;
+    border-radius: 0px;
+    background: rgba(59,141,248,1);
+    margin-left: 0px !important;
+}
+.sousuo_div {
+    float: right;
+    margin: 0px;
+}
+.table_div {
+    min-height: 633px;
+}
+.layui-table-cell{
+    padding:0 5px;
+}
+.chakan {
+    width: 100px;
+    height: 34px;
+    border: 1px solid rgba(62,142,247,1);
+    border-radius: 2px;
+    color: rgba(62,142,247,1);
+    line-height: 34px;
+    background: white !important;
+    padding:0px;
+}
+.nianling {
+    width: 4.9%;
+    line-height: 38px;
+    position: absolute;
+    background: white;
+    color:#666;
+    z-index: 2;
+    left: 10%;
+}
+.nianling_tit{
+    width:50%;
+    text-align:right;
+    float:left;
+}
+.paixu_nianling {
+    float: right;
+    width: 50%;
+    line-height:20px;
+    text-align:left;
+}
+.time {
+    width: 14.9%;
+    line-height: 38px;
+    position: absolute;
+    background: white;
+    color: #666;
+    z-index: 2;
+    left: 75%;
+}
+
+.time_tit {
+    width: 50%;
+    text-align: right;
+    float: left;
+}
+
+.paixu_time {
+    float: right;
+    width: 50%;
+    line-height: 20px;
+    text-align: left;
+}
+.paixu_time > img {
+    display: block;
+}
+.chakan:hover {
+    color: rgba(62,142,247,1);
+}
+.paixu_img {
+    background: initial;
+    height: auto;
+    padding: 0px;
+    margin: 0px !important;
+    display: block;
+}
+.sousuo_left, .sousuo_right{
+    width:50%;
+    float:left;
+}
+.sousuo_name{
+    float:left;
+    width:20%;
+    line-height:38px;
+}
+.sousuo_body {
+    float: left;
+    width: 70%;
+}
+.hang{
+    margin-bottom:10px;
+}
+.inputa{
+    display:initial;
+    width:200px;
+}
+.sousuo_butt{
+    text-align:center;
+}
+.sousuo_butt>button{
+    width:200px;
+    margin:20px 0px;
+}
+
+.videoTag-left1-dimensions {
+    width: 100%;
+}
+/*隐藏中间播放按钮*/
+.vjs-big-play-button {
+    visibility: hidden;
+}
+
+/*隐藏音量按钮--我们的项目应该没有声音*/
+
+.vjs-control-bar .vjs-volume-panel {
+    display: none;
+}
+
+/*隐藏视频左下角的播放按钮*/
+
+.vjs-control-bar .vjs-play-control {
+    display: none;
+}
+
+.video-js .vjs-time-control {
+    display: block;
+}
+
+.vjs-has-started .vjs-user-inactive .vjs-playing .vjs-control-bar {
+    opacity: 1 !important;
+}
+
+.video_left, .video_right {
+    height: 100px;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    float: left;
+    width: 70%;
+}
+.video_left1, .video_right1 {
+    float: left;
+    width: 20%;
+    display: none;
+}
+.is_act > p {
+    box-sizing: border-box;
+    border: 2px solid red;
+    height: 100px;
+}
+.video_left1 > p, .video_right1 > p {
+    background: black;
+    line-height: 100px;
+    margin: 0px 5px;
+    cursor: pointer;
+}
+.rufang_left, .rufang_right {
+    width: 30%;
+    height: 100px;
+    float: left;
+    overflow: hidden;
+    background: url(../img/female_breast.png) no-repeat;
+    background-size: 100% 100%;
+    position: relative;
+}
+#vide_img_left1, #vide_img_right1 {
+    width: 50%;
+    height: 100px;
+    display: none;
+}
+.video_img_left, .video_img_right {
+    margin-top: 15px;
+}
+.videoTag-right-dimensions{
+    width:100%;
+}
+.left-screenshot {
+    margin-top: 15px;
+}
+.pull-left {
+    margin: 0;
+    margin-bottom: 0px;
+    width: 50%;
+    text-align: right;
+}
+.playBtn {
+    height: 40px;
+    width: 80px;
+    background: linear-gradient(0deg,rgba(255,202,40,1) 0%,rgba(255,147,6,1) 100%);
+    border-radius: 4px;
+    border: none;
+    padding: 8px 20px;
+    font-size: 18px;
+    color: #fff;
+    outline: none;
+}
+.layui-laydate .layui-this {
+    background-color: rgba(59,140,247,1) !important;
+}
+.layui-table-body {
+    background: white;
+}
+.xiala1 {
+    width: 4.9%;
+    height: 38px;
+    position: absolute;
+    z-index: 3;
+    left: 26%;
+}
+
+.xianshi1 {
+    width: 4.9%;
+    height: 36px;
+    margin-top: 1px;
+    position: absolute;
+    left: 26%;
+    z-index: 2;
+    line-height: 36px;
+    color: #666;
+    background: white;
+    text-align: center;
+}
+.xiala_select {
+    width: 100%;
+    height: 38px;
+    opacity: 0;
+}

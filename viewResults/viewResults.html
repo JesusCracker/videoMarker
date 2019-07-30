@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>查看结果</title>
+    <style>
+        .layui-table-page .layui-laypage {
+            float: right;
+        }
+
+        .layui-table-cell {
+            height: 43px !important;
+            line-height: 43px !important;
+        }
+
+        .back {
+            display: none;
+        }
+
+        #paging {
+            text-align: center;
+            margin: 0 auto;
+            width: 800px;
+        }
+        .layui-form-radio > i:hover, .layui-form-radioed > i {
+            color: #1E9FFF!important;
+        }
+    </style>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+    <link rel="shortcut icon" href="../img/favicon.ico" >
+</head>
+<body onload="IFrameResize()">
+
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-col-xs5">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;">
+                <div class="layui-input-block" style="margin-left:0;">
+                    <label class="layui-form-label">任务完成进度</label>
+
+                    <input type="radio" name="taskProgress" value="0" title="全部" lay-filter="taskProgress" checked>
+                    <input type="radio" name="taskProgress" value="1" lay-filter="taskProgress" title="已完成">
+                    <input type="radio" name="taskProgress" value='2' lay-filter="taskProgress" title="未完成">
+                </div>
+
+            </div>
+        </div>
+        <div class="layui-col-xs1" style="margin-right: 30px;">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;">
+                <div class="layui-input-block" style="margin-left:0;">
+                    <input type="text" class="layui-input" id="dateChoose" lay-filter="dateChoose" placeholder="选择日期"
+                           autocomplete="off">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="layui-col-xs1">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;">
+                <div class="layui-input-block" style="margin-left:0;">
+
+                    <select name="taskOwner" lay-filter="taskOwner" class="taskOwner" lay-search>
+                        <option value="">选择人员</option>
+                    </select>
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs1" style="margin-bottom: 5px;margin-top: 5px;margin-left: 30%">
+            <div class="back layui-btn layui-btn-normal" onclick="window.history.go(-1)">返回</div>
+        </div>
+
+    </div>
+
+
+</form>
+<!--
+<table class="layui-hide" id="taskList" lay-filter="taskList">
+
+</table>-->
+
+<div class="results">
+
+    <div style="padding: 20px; background-color: #F2F2F2;">
+        <div class="layui-row layui-col-space15" id="resultList">
+
+            <!-- <div class="layui-col-md3">
+                 <div class="layui-card">
+                     <div class="layui-card-header">
+                         <div class="layui-row">
+                             <div class="layui-col-xs11">
+                                 <span class="isFinish">已完成</span>
+                             </div>
+                             <div class="layui-col-xs1">
+                                 <span class="rate" style="text-align: right">50%</span>
+                             </div>
+                         </div>
+                     </div>
+
+                     <div class="layui-card-body">
+                         <div class="image" style="height: 250px;background: #ee4433">
+                             <img src="" alt="">
+                         </div>
+                     </div>
+                     <div class="layui-card-body">
+                         <div class="firstLine"><span>任务名称：</span><span class="taskName">xxxx</span></div>
+                         <div class="layui-row">
+                             <div class="layui-col-xs7">
+                                 <div class="firstLine"><span>创建日期：</span><span class="createDate">2019-10-20</span>
+                                 </div>
+                             </div>
+                             <div class="layui-col-xs5">
+                                 <div class="firstLine"><span>创建人：</span><span class="owner">哈哈哥</span></div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>-->
+
+
+        </div>
+        <div id="paging"></div>
+    </div>
+
+</div>
+
+
+<script src="../js/config.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../layui/layui.all.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+<script>
+    var nowTime = new Date().valueOf();
+    var createDate = '';
+
+    function IFrameResize() {
+        var obj = parent.document.getElementById("external-frame"); //取得父页面IFrame对象
+        obj.height = this.document.body.scrollHeight;
+    }
+
+    //截取url
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return decodeURI(r[2]);
+        return null; //返回参数值
+    }
+
+    if (getUrlParam('from') == 'workBench') {
+        $('.back').show();
+    } else {
+        $('.back').hide();
+    }
+
+
+    //  时间格式化
+    function createTime(v, format) {
+        var date = new Date(v);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ("0" + d) : d;
+        var h = date.getHours();
+        h = h < 10 ? ("0" + h) : h;
+        var M = date.getMinutes();
+        M = M < 10 ? ("0" + M) : M;
+        var s = date.getSeconds();
+        if (s < 10)
+            s = '0' + s;
+        str = `${y}-${m}-${d} ${h}:${M}:${s}`;
+        if (format == 'y-m') {
+            str = `${y}-${m}`
+        } else if (format == 'y-m-d') {
+            str = `${y}-${m}-${d}`
+        } else if (format == 'h:m:s') {
+            str = `${h}:${M}:${s}`
+        }
+        return str;
+    }
+
+
+    function showStatus(state) {
+        // 状态：1已完成 2未完成 全部不传或传0
+        var result = '';
+        if (state == 1) {
+            result = `<span style="color: #1E9FFF;font-weight: bold">已完成</span>`
+        }
+        if (state == 2) {
+            result = `<span style="color: #e43;font-weight: bold">未完成</span>`
+        }
+        return result;
+    }
+
+
+    layui.use(['laypage', 'laydate', 'form'], function () {
+        var laypage = layui.laypage,
+            laydate = layui.laydate,
+            form = layui.form;
+
+
+        $.ajax({
+            type: "post",
+            async: false,
+            url: publicUrl + "/videomana/taskList.do?page=1&limit=8",
+
+            headers: {"loginToken": loginToken},
+            dataType: "json",
+            success: function (res) {
+                if (res.code == 2) {
+                    parent_tuichu()
+                }
+                addData(res.data);
+                var count = res.dataTotal;
+
+                paging(count);
+            },
+            error: function (res) {
+                layer.msg(res.message);
+            }
+        });
+
+
+        //监听任务完成进度选项
+        form.on("radio(taskProgress)", function (data) {
+            //全部，已完成，未完成
+            // var taskProgress = data.value;
+            tableReload();
+            // console.log(data.value);
+
+        });
+
+        //监听任务创建人下拉选项
+        form.on('select(taskOwner)', function (data) {
+            // var owner=data.value;
+            tableReload();
+        });
+
+        // 选择时间控件
+        laydate.render({
+            trigger: 'click',
+            elem: '#dateChoose',
+            max: nowTime,
+            done: function (value, date, endDate) {
+                createDate = value;
+                $("#dateChoose").val(value);
+                tableReload();
+            }
+
+        });
+
+
+        tableReload = () => {
+            var taskProgress = $("input[type='radio']:checked").val();
+            var taskOwner = $("select[name=taskOwner]").val();
+            var createDate = $("#dateChoose").val();
+
+            var params = {};
+
+            if (taskProgress && taskOwner == '' && createDate == '') {
+                params = {
+                    'status': taskProgress,
+                }
+            }
+            if (taskProgress && taskOwner != '' && createDate == '') {
+                params = {
+                    'status': taskProgress,
+                    'createUserId': taskOwner,
+                }
+            }
+            if (taskProgress && taskOwner == '' && createDate != '') {
+                params = {
+                    'status': taskProgress,
+                    'createDateF': createDate,
+                }
+            }
+            if (taskProgress && taskOwner != '' && createDate != '') {
+                params = {
+                    'status': taskProgress,
+                    'createDateF': createDate,
+                    'createUserId':taskOwner
+                }
+            }
+
+
+
+
+            $.ajax({
+                type: "post",
+                async: false,
+                url: publicUrl + "/videomana/taskList.do?page=1&limit=8",
+                data: params,
+                headers: {"loginToken": loginToken},
+                dataType: "json",
+                success: function (res) {
+                    if (res.code == 2) {
+                        parent_tuichu()
+                    }
+                    addData(res.data);
+                    var count = res.dataTotal;
+
+                    paging(count);
+                },
+                error: function (res) {
+                    layer.msg(res.message);
+                }
+            });
+        }
+
+
+        function getTotal(mainId) {
+            $.ajax({
+                type: "post",
+                async: false,
+                url: publicUrl + `/videomana/imageList.do?page=1&limit=4&mainId=${mainId}`,
+                headers: {"loginToken": loginToken},
+                dataType: "json",
+                success: function (res) {
+                    if (res.code == 2) {
+                        parent_tuichu()
+                    }
+                    // console.log(res.dataTotal);
+
+                    return res.dataTotal;
+                },
+                error: function (res) {
+                    layer.msg(res.message);
+
+                }
+            });
+        }
+
+        //laypage分页
+        function paging(count) {
+
+            laypage.render({
+                elem: 'paging' //注意，这里的 test1 是 ID，不用加 # 号
+                , count: count //数据总数，从服务端得到
+                , layout: ['prev', 'page', 'next', 'skip', 'count', 'limit']
+                , theme: "#3B8DF8"
+                , limit: 8
+                , limits: [4, 8, 12]
+
+                , jump: function (obj, first) {
+                    //obj包含了当前分页的所有参数，比如：
+
+                    //首次不执行
+                    if (!first) {
+                        $.ajax({
+                            type: "post",
+                            async: false,
+                            url: publicUrl + "/videomana/taskList.do?page=" + obj.curr + "&limit=" + obj.limit,
+                            headers: {"loginToken": loginToken},
+                            dataType: "json",
+                            success: function (res) {
+                                if (res.code == 2) {
+                                    parent_tuichu()
+                                }
+                                addData(res.data);
+
+                            },
+                            error: function (res) {
+
+                            }
+                        });
+                    }
+                }
+            });
+
+        }
+
+
+        function addData(param) {
+
+            // 状态：1已完成 2未完成 全部不传或传0
+            $("#resultList").empty();
+            for (var i = 0; i < param.length; i++) {
+                var str = `  <div class="layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <div class="layui-row">
+                            <div class="layui-col-xs11">
+                                <span class="isFinish">${showStatus(param[i].status)}</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="layui-card-body">
+                        <div class="image" style="height: 170px;" taskID='${param[i].id}' taskName="${param[i].taskName}" onclick="linkToTunnelView(this);">
+                            <img src="../img/tunnel.png" alt="" style="width: 100%;height: 100%;">
+                        </div>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="firstLine layui-elip"><span>任务名称：</span><span class="taskName">${param[i].taskName}</span></div>
+                        <div class="layui-row">
+                            <div class="layui-col-xs7">
+                                <div class="firstLine"><span>创建日期：</span><span class="createDate">${createTime(param[i].createDate, 'y-m-d')}</span></div>
+                            </div>
+                            <div class="layui-col-xs5">
+                                <div class="firstLine"><span>创建人：</span><span class="owner">${param[i].createUserName}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+                $("#resultList").append(str);
+            }
+        }
+
+        /*
+
+                // 选择时间控件
+                laydate.render({
+                    elem: '#dateChoose',
+                    max: nowTime,
+                    done: function (value, date, endDate) {
+                        createDate = value;
+                        $("#dateChoose").val(value);
+
+                    }
+
+                });
+        */
+
+
+        //获取任务创建人列表
+        var taskOwnerList;
+        $.ajax({
+            type: "post",
+            async: true,
+            url: publicUrl + '/user/userList.do',
+            headers: {
+                'loginToken': loginToken
+            },
+            dataType: "json",
+            data: {
+                page: 1,
+                limit: 1000,
+            },
+            success: function (res) {
+                if (res.status == 1) {
+                    taskOwnerList = res.data;
+                    // console.log(taskOwnerList);
+
+                    //获取名称
+                    for (const item  of taskOwnerList) {
+                        $('.taskOwner').append(`<option value=${item.id}  >${item.name}</option>`);
+                    }
+                    form.render();
+
+                } else {
+                    layer.msg(res.message);
+
+                }
+            },
+            error: function (res) {
+                layer.msg('服务器请求失败');
+            }
+        });
+
+
+        /*     //监听任务完成进度选项
+             form.on("radio(taskProgress)", function (data) {
+                 //全部，已完成，未完成
+                 var taskProgress = data.value;
+
+
+             });
+
+             //监听任务创建人下拉选项
+             form.on('select(taskOwner)', function (data) {
+                 var owner = data.value;
+             });*/
+
+        //点击任务缩略图
+        /*  $('.image').click(function () {
+
+              // top.location=`../vision/tunnelView.html?taskID=${taskID}`
+          })
+  */
+
+        linkToTunnelView = (ele) => {
+
+            var taskID = $(ele).attr('taskID');
+            var taskName = $(ele).attr('taskName')
+            window.open(`../vision/tunnelView.html?taskID=${taskID}&taskName=${taskName}`);
+        }
+    });
+</script>
+
+</body>
+</html>

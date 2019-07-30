@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户管理列表</title>
+    <style>
+        .layui-table-page .layui-laypage {
+            float: right;
+        }
+
+        .layui-table-cell {
+            height: 43px !important;
+            line-height: 43px !important;
+        }
+        .layui-laypage .layui-laypage-curr .layui-laypage-em{
+            background-color: #1E9FFF!important;
+        }
+    </style>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+
+</head>
+<body onload="IFrameResize()">
+<!--
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-col-xs4">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;">
+                <div class="layui-input-block" style="margin-left:0;">
+                    <label class="layui-form-label">任务完成进度</label>
+                    <input type="radio" name="taskProgress" value="全部" title="全部" lay-filter="taskProgress" checked>
+                    <input type="radio" name="taskProgress" value="已完成" lay-filter="taskProgress" title="已完成">
+                    <input type="radio" name="taskProgress" value="未完成" lay-filter="taskProgress" title="未完成">
+                </div>
+
+            </div>
+        </div>
+        <div class="layui-col-xs1" style="margin-right: 30px;">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;">
+                <div class="layui-input-block" style="margin-left:0;">
+                    <input type="text" class="layui-input" id="dateChoose" placeholder="选择日期" autocomplete="off">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="layui-col-xs1">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;">
+                <div class="layui-input-block" style="margin-left:0;">
+
+                    <select name="taskOwner" lay-filter="taskOwner" class="taskOwner" lay-search>
+                        <option value="">选择人员</option>
+                    </select>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</form>-->
+
+<table class="layui-hide" id="taskLists" lay-filter="taskLists"></table>
+
+<!--//状态：1正常，2停用 3删除-->
+<script type="text/html" id="opreation">
+
+
+    <a class="layui-btn layui-btn-normal layui-btn-radius" lay-event="edit">
+        <div class="circle3">
+            <span class="circleTitle2 ">修&nbsp改</span>
+        </div>
+    </a>
+
+
+    <a class="layui-btn layui-btn-danger layui-btn-radius" lay-event="delete">
+        <div class="circle3">
+            <span class="circleTitle2 ">删&nbsp除</span>
+        </div>
+    </a>
+
+
+</script>
+
+<script src="../js/config.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../layui/layui.all.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+<script>
+    var nowTime = new Date().valueOf();
+    var createDate = '';
+
+    //  时间格式化
+    function createTime(v, format) {
+        var date = new Date(v);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ("0" + d) : d;
+        var h = date.getHours();
+        h = h < 10 ? ("0" + h) : h;
+        var M = date.getMinutes();
+        M = M < 10 ? ("0" + M) : M;
+        var s = date.getSeconds();
+        if (s < 10)
+            s = '0' + s;
+        str = `${y}-${m}-${d} ${h}:${M}:${s}`;
+        if (format == 'y-m') {
+            str = `${y}-${m}`
+        } else if (format == 'y-m-d') {
+            str = `${y}-${m}-${d}`
+        } else if (format == 'h:m:s') {
+            str = `${h}:${M}:${s}`
+        }
+        return str;
+    }
+
+
+    function showStatus(state) {
+        //状态：1正常，2停用 3删除
+        var result = '';
+        if (state == 1) {
+            result = `<span style="color: #1E9FFF;">正常</span>`
+        }
+        if (state == 2) {
+            result = `<span style="color: #ac2925">停用</span>`
+        }
+        if (state == 3) {
+            result = `<span style="color: #ac2925">删除</span>`
+        }
+        return result;
+    }
+
+    function IFrameResize() {
+        var obj = parent.document.getElementById("external-frame"); //取得父页面IFrame对象
+        obj.height = this.document.body.scrollHeight;
+    }
+
+
+    layui.use(['layer', 'table', 'laydate', 'form'], function () {
+        var table = layui.table,
+            laydate = layui.laydate,
+            layer = layui.layer,
+            form = layui.form;
+
+
+        //初始化任务列表表格
+        table.render({
+            elem: '#taskLists',
+            headers: {
+                'loginToken': loginToken
+            },
+            id: 'taskLists',
+            page: true,
+            limit: 5,
+            limits: [5, 8, 10, 12, 15],
+            method: 'post',
+            url: publicUrl + '/user/userList.do',
+            cols: [[
+                {field: 'name', unresize: true, align: "center", title: '姓名', width: '15%'},
+                {field: 'sex', unresize: true, align: "center", title: '姓别', width: '10%'},
+                {
+                    field: 'birth', unresize: true, align: "center", title: '出生年月', width: '20%', templet: d => {
+                        return createTime(d.birth, 'y-m-d')
+                    }
+                },
+                {field: 'phone', unresize: true, align: "center", title: '手机号', width: '15%'},
+                {field: 'email', unresize: true, align: "center", title: '邮箱', width: '15%'},
+                {
+                    field: 'status', unresize: true, align: "center", title: '状态', width: '10%', templet: d => {
+                        return showStatus(d.status)
+                    }
+                },
+
+                {unresize: true, align: "center", title: '操作', toolbar: '#opreation'}
+            ]],
+            parseData: function (res) {
+                console.log(res);
+
+                if (res.status == 2) {
+                    parent_tuichu()
+                }
+                var num = res.data.length;
+                var height = 55 * num + 4;
+                // console.log(height)
+                $(".layui-table-body").css("height", height + "px");
+                IFrameResize();
+                count = res.count;
+                var data = res.data;
+                var code = 0;
+                res.code = code;
+                res.count = res.dataTotal;
+                return res;
+            }
+        });
+
+
+        table.on('tool(taskLists)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'delete') {
+                //阻止tool上绑定的事件和tr上的点击事件冒泡
+                layui.stope(event);
+
+                layer.open({
+                    shadeClose: true,//点击遮罩层关闭
+                    fixed: false, //不固定
+                    maxmin: false,//显示最大最小化按钮
+                    closeBtn: 0,
+                    zIndex: 9999,//层
+                    offset: 'auto',
+                    title: false,
+                    scrollbar: true,//显示滚动条
+                    shade: 0.4,//阴影
+                    btn: ["确认", "取消"],
+                    btnAlign: 'c',
+                    content: `确定删除${data.name}吗？`,
+                    yes: function (index, layero) {
+                        deleteUser(data.id);
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
+                    }
+                });
+                // deleteUser(data.id);
+                // console.log(data);
+            }
+            if (obj.event == 'edit') {
+                layui.stope();
+                localStorage.setItem('userInfo',JSON.stringify(data));
+                location.href=`../addUser/addUser.html?getUserInfo=true`;
+            }
+        });
+
+
+        //设置状态为停用
+        function deleteUser(id) {
+
+            $.ajax({
+                type: "post",
+                async: true,
+                url: publicUrl + '/user/deleteUser.do',
+                headers: {
+                    'loginToken': loginToken
+                },
+                data: {'id': id},
+                success: function (res) {
+                    res = JSON.parse(res);
+                    if (res.status == 1) {
+                        layer.msg('删除成功', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+                        tableReload()
+                    } else {
+                        layer.msg(res.message);
+                    }
+                },
+                error: function (res) {
+                    layer.msg('服务器请求失败');
+                }
+            });
+        }
+
+
+        //重载任务列表表格
+        function tableReload() {
+            table.reload('taskLists', {
+                page: {curr: 1},
+                elem: '#taskLists',
+                headers: {
+                    'loginToken': loginToken
+                },
+
+                method: 'post',
+                url: publicUrl + '/user/userList.do',
+                parseData: function (res) {
+                    if (res.status == 2) {
+                        parent_tuichu()
+                    }
+                    var num = res.data.length;
+                    var height = 55 * num + 4;
+                    console.log(height)
+                    $(".layui-table-body").css("height", height + "px");
+                    IFrameResize();
+                    count = res.count;
+                    var data = res.data;
+                    var code = 0;
+                    res.code = code;
+                    res.count = res.dataTotal;
+                    return res;
+                }
+            });
+        }
+
+    });
+</script>
+
+</body>
+</html>

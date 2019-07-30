@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>videojs</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.3.0/video-js.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/videojs-markers/0.7.0/videojs.markers.css" rel="stylesheet">
+    <style type="text/css">
+        #example_video{
+            width: 640px;
+            height: 340px;
+        }
+    </style>
+</head>
+<body>
+
+<video id="example_video" class="video-js vjs-defalut-skin" controls preload="metadata">
+    <source src="http://hc.yinyuetai.com/uploads/videos/common/FA6B0169A324DD75A87E1C84F4B31399.mp4?sc=48ed02b41892022b&br=780&vid=3365773&aid=22&area=HT&vst=0" type="video/mp4">
+</video>
+
+<div class="btn-group">
+    <button type="button" id="btn-prev">上一个打点位置</button>
+    <button type="button" id="btn-next">下一个打点位置</button>
+    <div>
+        <span>所有标记时间增加：</span>
+        <input type="text" name="" id="add-time">
+        <span>秒</span>
+        <button type="butotn" id="btn-confirm">确认增加</button>
+    </div>
+    <button type="button" id="btn-del">删除标记</button>
+    <button type="button" id="btn-add">添加标记</button>
+    <button type="button" id="btn-reset">重置标记</button>
+</div>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.3.0/video.min.js"></script>
+<script src="https://cdn.bootcss.com/videojs-markers/0.7.0/videojs-markers.js"></script>
+<script type="text/javascript">
+    var player = videojs('example_video');  //实例化对象
+
+    player.markers({
+        markerStyle:{  //标记样式
+            'width':'7px',
+            'border-radius': '0%',
+            'background-color': 'orange'
+        },
+        markerTip:{  //悬停标记提示对象
+            display:true,  //是否显示markerTips
+            /*
+              用于动态构建标记提示文本的回调函数。
+              只需返回一个字符串，参数标记是传递给插件的标记对象
+             */
+            text: function(marker) {
+                return "This is a break: " + marker.text;
+            }
+        },
+        breakOverlay:{  //每个标记的中断覆盖选项
+            display: true,  //是否显示叠加层
+            displayTime: 3,
+            style:{  //为叠加层添加css样式
+                color:"red"
+            },
+            text: function(marker) {  //回调函数动态构建叠加文本
+                return "This is an break overlay: " + marker.text;
+            }
+        },
+        onMarkerReached:function(marker, index){  //只要播放到标记的时间间隔，就会出发此回调函数
+
+        },
+        onMarkerClick:function(marker,index){  //单击标记时会触发此回调函数，
+            /*
+              单击标记的默认行为是在视频中寻找该点，
+              但是，如果onMarkerClick返回false，则将阻止默认行为
+            */
+        },
+        markers:[
+            {
+                time:9.5,
+                text:"this"
+            },
+            {
+                time:30.5,
+                text:"is"
+            },
+            {
+                time:60.5,
+                text:"demo"
+            },
+            {
+                time:90.5,
+                text:"markers"
+            },
+            {
+                time:120.5,
+                text:":)"
+            },
+        ],
+    });
+
+    /****** 返回插件中当前标记的数组，按升序时间排序 ******/
+    var getMarkers = player.markers.getMarkers();
+
+    /****** 从视频中的当前时间转到下一个标记。 如果没有下一个标记，那么什么都不做 ******/
+
+    $("#btn-next").click(function(){
+        player.markers.next();
+    })
+
+    /****** 从视频中的当前时间转到上一个标记。 如果没有上一个标记，那么什么都不做 ******/
+
+    $("#btn-prev").click(function(){
+        player.markers.prev();
+    })
+
+    /****** 允许动态修改标记时间（传入原始标记对象） ******/
+    $("#btn-confirm").click(function(){
+        var markers = player.markers.getMarkers();
+        var add_time = parseInt( $("#add-time").val() );
+        console.log(add_time);
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].time += add_time;
+        }
+        //调用updateTime以立即反应UI中的更改
+        player.markers.updateTime();
+    })
+
+    /****** 删除给定索引数组中的标记（从0开始） ******/
+    $("#btn-del").click(function(){
+        //player.markers.remove([1,3]);
+
+        //删除所有标记
+        player.markers.removeAll();
+    })
+
+    /****** 动态添加新标记 ******/
+    $("#btn-add").click(function(){
+        player.markers.add([{
+            time: 40,
+            text: "I'm added dynamically"
+        }]);
+    })
+
+    /****** 重置视频中的所有标记（相当于removeAll后再设置） ******/
+    $("#btn-reset").click(function(){
+        player.markers.reset([{
+            time: 40,
+            text: "I'm new"
+        },
+            {
+                time:20,
+                text: "I'm new too"
+            }]);
+    })
+</script>
+</body>
+</html>

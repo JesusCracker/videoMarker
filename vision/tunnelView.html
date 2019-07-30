@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>管道平面图</title>
+    <style>
+        .back {
+            text-align: center;
+        }
+    </style>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <!-- 引入 echarts.js -->
+    <script src="../js/config.js"></script>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/echarts.min.js"></script>
+    <script src="../layui/layui.js"></script>
+</head>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+
+<div id="main" style="width: 1100px;height:600px; margin:  0 auto;margin-top: 50px;"></div>
+<!--<div class="back layui-btn layui-btn-normal" style="margin-left: 50%">返回</div>-->
+<script type="text/javascript">
+
+    //截取url
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return decodeURI(r[2]);
+        return null; //返回参数值
+    }
+
+    var tunnelMarkedData=[];
+    var tunnelPostion=[],tunnelVote=[];
+
+    $.getJSON('../data/tunnelData.json', function (tunnelData) {
+        //获取任务中被标记的管道行数数据
+        var taskID=getUrlParam('taskID');
+        var taskName=getUrlParam('taskName');
+        $.ajax({
+            type: "post",
+            async: false,
+            url: publicUrl + `/videomana/imageList.do?page=1&limit=10000&mainId=${taskID}`,
+            headers: {"loginToken": loginToken},
+            dataType: "json",
+            success: function (res) {
+                if (res.code == 2) {
+                    parent_tuichu()
+                }
+
+                for(let i=0;i<res.data.length;i++){
+
+                    tunnelMarkedData.push([res.data[i].rowNo,res.data[i].colNo,res.data[i].malfunctionRatio])
+                }
+            },
+            error: function (res) {
+                layer.msg(res.message);
+
+            }
+        });
+
+/*
+        for(let i=0;i<tunnelMarkedData.length;i++){
+            tunnelPostion.push(tunnelMarkedData[i].tunnelPostion);
+            tunnelVote.push(tunnelMarkedData[i].tunnelVote);
+        }
+
+*/
+        //获取故障百分比
+        function getPercentFailure(data) {
+            var str=''
+            if(data!=0){
+                str=`故障率为:${data}%`;
+            }else{
+                str='状态：正常';
+            }
+            return str;
+        }
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // var targetData = [[21, 8]];
+
+        option = {
+
+            title: {
+                text: '管道平面图',
+                x: 'center',
+                y: 0,
+                textStyle: {
+                    color: '#3259B8',
+                    fontSize: 16,
+                    fontWeight: 'normal',
+                }
+            },
+            visualMap: {
+                min: 1,
+                max: 53,
+                dimension: 1,
+                left: 'right',
+                top: 'top',
+                text: ['高层', '底层'], // 文本，默认为数值文本
+                calculable: true,
+                itemWidth: 18,
+                itemHeight: 160,
+                textStyle: {
+                    color: '#3259B8',
+                    height: 56,
+                    fontSize: 15,
+                    lineHeight: 60,
+                },
+                inRange: {
+                    color: ['#3EACE5', '#F02FC2']
+                },
+                padding: [50, 20],
+                orient: 'horizontal',
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                right: '30',
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    saveAsImage: {
+                        show: true,
+                        name:`管道平面图-${taskName}`,
+
+                    }
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                showDelay: 0,
+                formatter: function (params) {
+
+                    if (params.value.length > 1) {
+                        return '这根管道是: ' + ' <br/>' +
+                            params.value[0] + '行' + ' ' + params.value[1] + '列'
+                    }
+
+                },
+
+            },
+            xAxis: [{
+                type: 'value',
+                scale: true,
+                min: 1,
+                max: 110,
+                axisLabel: {
+                    formatter: '{value} 行'
+                },
+                nameTextStyle: {
+                    color: '#3259B8',
+                    fontSize: 14,
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#3259B8',
+                    }
+                },
+                splitLine: {
+                    show: false,
+                }
+            }],
+            yAxis: [{
+                type: 'value',
+                scale: true,
+                min: 1,
+                max: 53,
+                axisLabel: {
+                    formatter: '{value}列'
+                },
+                nameTextStyle: {
+                    color: '#3259B8',
+                    fontSize: 14
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#3259B8',
+                    }
+                },
+                splitLine: {
+                    show: false,
+                }
+            }],
+            series: [{
+                name: 'tunnel-area',
+                type: 'scatter',
+                data: tunnelData,
+                symbolSize: 6,
+
+
+            }, {
+                name: 'target',
+                type: 'scatter',
+                symbolSize: 15,
+                symbol: 'image://data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7',
+               /* label: {
+                    position: 'top',
+                    show: true,
+                    color: '#e43',
+                    fontWeight: 'bolder',
+                    formatter: function (params) {
+                        var position = params.data;
+                        return `${position[0]}行 ${position[1]}列`;
+                    }
+                },*/
+
+                tooltip: {
+                    show: true,
+                    trigger: 'item',
+                    formatter: function (params) {
+                        if (params.value.length > 1) {
+                            return '这根管道是: ' + ' <br/>' +
+                                params.value[0] + '行' + ' ' + params.value[1] + '列'+  ' <br/>' +'  ' + getPercentFailure(params.value[2]);
+                        }
+
+                    },
+                    backgroundColor: '#d9cbed',
+                    textStyle: {
+                        color: '#f04c47'
+                    }
+                },
+                zlevel: 6,
+                data: tunnelMarkedData
+            },
+
+            ]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    });
+
+/*    $('.back').click(function () {
+        history.back(-1);
+    })*/
+</script>
+</body>
+</html>

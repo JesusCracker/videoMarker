@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" id="viewport"
+          name="viewport">
+    <meta name="format-detection" content="telephone=no, email=no"/>
+    <meta name="description" content=""/>
+    <meta name="wap-font-scale" content="no"><!--uc浏览器判断到页面上文字居多时，会自动放大字体优化移动用户体验。这个可以禁止掉-->
+    <meta name="keywords" content=""/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <meta name="apple-touch-fullscreen" content="yes"/><!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <!-- 设置苹果工具栏颜色:默认值为 default，可以定为 black和 black-translucent-->
+    <meta http-equiv="Cache-Control" content="no-siteapp"/><!-- 不让百度转码 -->
+    <meta name="HandheldFriendly" content="true"><!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="MobileOptimized" content="320"><!-- 微软的老式浏览器 -->
+    <meta name="screen-orientation" content="portrait"><!-- uc强制竖屏 -->
+    <meta name="x5-orientation" content="portrait"><!-- QQ强制竖屏 -->
+    <meta name="x5-page-mode" content="app"><!-- QQ应用模式 -->
+    <meta name="msapplication-tap-highlight" content="no"><!-- windows phone 点击无高光 -->
+    <meta name="apple-mobile-web-app-capable" content="yes"><!-- ios 开启对web app程序的支持 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"><!-- ios 改变顶部状态条的颜色 -->
+    <title>canvas写字板</title>
+    <link rel="stylesheet" href="../css/colpick.css"/>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <style>
+        body, canvas {
+            /* height: 1000px; */
+            padding: 0;
+            margin: 0;
+            /*background-color: #f0f0f0;*/
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+
+        }
+
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            height: 600px;
+        }
+
+        .container .-tablet,
+        .container .-tablet-container,
+        .container .-canvas-wrapper {
+            height: 100%;
+            /*background: url("./images/right_729_0.jpg") no-repeat  ;*/
+            background-size: 100%;
+            width: 80%;
+
+        }
+
+    </style>
+</head>
+<body>
+<!-- <h1>canvas写字板</h1> -->
+
+
+<div class="container" id="container">
+
+</div>
+<!--<div id="screenHeight" >
+    <img id="preview_img" style="position: absolute;" src="" alt="" />
+</div>-->
+
+<!-- <div class="container">
+       <div class="-tablet-container">
+           <div class="tablet-btns">
+               <input class="-color-picker" type="text" value="字体颜色" id="colpick" readonly />
+               <input class="-color-picker" type="text" value="背景颜色" id="colpick2" readonly />
+               <div class="clear-canvas">清屏</div>
+               <div class="save-canvas-to-img">保存图片</div>
+           </div>
+           <div class="-canvas-wrapper">
+               <canvas id="tablet_canvas"></canvas>
+           </div>
+       </div>
+   </div> -->
+
+<div class="layui-row" style="margin-bottom: 30px;">
+    <div class="layui-col-xs1">
+        <div class="layui-btn preview">上一张</div>
+    </div>
+
+    <div class="layui-col-xs10">
+        <div class="position" style="text-align: center"></div>
+    </div>
+
+   <div class="layui-col-xs1">
+       <div class="layui-btn next">下一张</div>
+   </div>
+
+</div>
+<script type="text/html" id="temp">
+
+    <span>
+               画笔粗细
+               <select>
+                   <option value="1">1</option>
+                   <option value="3">3</option>
+                   <option value="5">5</option>
+                   <option value="8">8</option>
+                   <option value="10" selected>10</option>
+                   <option value="15">15</option>
+                   <option value="20">20</option>
+               </select>
+
+               <select>
+                   <option value=1>正常</option>
+                   <option value=2>故障</option>
+               </select>
+
+
+                <span class="save-canvas-to-img">
+                   保存图片
+               </span>
+
+
+        <!-- <span class="download">预览图片</span> -->
+           </span>
+</script>
+
+
+<script src="../js/config.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../layui/layui.all.js"></script>
+<script src="../js/Tablet-1.0.js"></script>
+<script>
+    var tablet;
+    //  时间格式化
+    function createTime(v, format) {
+        var date = new Date(v);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ("0" + d) : d;
+        var h = date.getHours();
+        h = h < 10 ? ("0" + h) : h;
+        var M = date.getMinutes();
+        M = M < 10 ? ("0" + M) : M;
+        var s = date.getSeconds();
+        if (s < 10)
+            s = '0' + s;
+        str = `${y}-${m}-${d} ${h}:${M}:${s}`;
+        if (format == 'y-m') {
+            str = `${y}-${m}`
+        } else if (format == 'y-m-d') {
+            str = `${y}-${m}-${d}`
+        } else if (format == 'h:m:s') {
+            str = `${h}:${M}:${s}`
+        }
+        return str;
+    }
+
+
+    //将秒转成HH：MM：SS
+    _changeTimeBySecond = (second) => {
+        var hourTime = 0;
+        var minuteTime = 0;
+        var secondTime = 0;
+        if (second > 60) {  //如果秒数大于60
+            minuteTime = Math.floor(second / 60);
+            secondTime = Math.floor(second % 60);
+            if (minuteTime >= 60) {  //如果分钟大于60
+                hourTime = Math.floor(minuteTime / 60);
+                minuteTime = Math.floor(minuteTime % 60);
+            } else {
+                hourTime = 0;
+            }
+        } else {
+            hourTime = 0;
+            minuteTime = 0;
+            if (second == 60) {  //如果秒数等于60
+                minuteTime = 1;
+                secondTime = 0;
+            } else {
+                secondTime = second;
+            }
+        }
+        var timeResult = this._addZero(hourTime) + ':' + this._addZero(minuteTime) + ':' + this._addZero(secondTime);
+        return timeResult;
+    }
+
+    //补0
+    _addZero = (time) => {
+        let str = time;
+        if (time < 10) {
+            str = '0' + time;
+        }
+        return str;
+    }
+
+    showAIResult=(resultNum)=>{
+        if(resultNum==0){
+            return '-';
+        }
+        if(resultNum==1){
+            return'正常';
+        }
+        if(resultNum==2){
+            return '故障';
+        }
+    };
+
+
+    $(function () {
+        var aiResult = 1;
+        showAIResult=(resultNum)=>{
+            if(resultNum==0){
+                return '-';
+            }
+            if(resultNum==1){
+                return'正常';
+            }
+            if(resultNum==2){
+                return '故障';
+            }
+        };
+
+        showMalfunctionRatio=(malfunctionRatio)=>{
+            if(malfunctionRatio!=0){
+                return `${malfunctionRatio}%`;
+            }
+            else{
+                return '-';
+            }
+        }
+
+        //上一张图片
+        previewOne=(id,mainid)=>{
+            $.ajax({
+                type: "post",
+                async: true,
+                url: publicUrl + '/videomana/previousImage.do',
+                headers: {
+                    'loginToken': loginToken
+                },
+                data: {
+                    'id':id,
+                    'mainId':mainid
+                },
+                success: function (res) {
+                    res=JSON.parse(res);
+
+                    if (res.status == 1) {
+                        thisIMGInfo=res.data;
+                        refreshInfo(thisIMGInfo);
+                        // shows();
+                    } else {
+                        layer.msg(res.message);
+
+                    }
+                },
+                error: function (res) {
+                    layer.msg('服务器请求失败');
+                }
+            });
+        };
+
+        //下一张图片
+        nextOne=(id,mainid)=>{
+            $.ajax({
+                type: "post",
+                async: true,
+                url: publicUrl + '/videomana/nextImage.do',
+                headers: {
+                    'loginToken': loginToken
+                },
+                data: {
+                    'id':id,
+                    'mainId':mainid
+                },
+                success: function (res) {
+                    res=JSON.parse(res);
+                    if (res.status == 1) {
+
+                        thisIMGInfo=res.data;
+                        refreshInfo(thisIMGInfo);
+                        // shows();
+                        // console.log(thisIMGInfo);
+
+                    } else {
+                        layer.msg(res.message);
+
+                    }
+                },
+                error: function (res) {
+                    layer.msg('服务器请求失败');
+                }
+            });
+        };
+
+        function refreshInfo(thisIMGInfo){
+            $('.position').empty().append(`<span style="margin-right: 10px;">坐标:第${thisIMGInfo.colNo}列，第${thisIMGInfo.rowNo}行</span>
+    <span style="margin-right: 10px;">截图位置：${_changeTimeBySecond(thisIMGInfo.location)}</span>
+    <span style="margin-right: 10px;">标注人员：${thisIMGInfo.createUserName}</span>
+    <span style="margin-right: 10px;">标注时间：${createTime(thisIMGInfo.createDate,'y-m-d')}</span>
+    <span style="margin-right: 10px;">AI分析结果：${showAIResult(thisIMGInfo.aiResult)}</span>
+    <span>AI分析故障比例：${showMalfunctionRatio(thisIMGInfo.malfunctionRatio)} </span>`);
+            $('.container .-canvas-wrapper').empty().css('background', `url(${imgUrl + thisIMGInfo.screenImg})`);
+
+        }
+
+        function shows(){
+
+            tablet = new Tablet("#container", {
+                defaultColor: "#ed0c0c",
+                otherHtml: $("#temp").html(),
+                onInit: function () {
+                    var that = this,
+                        container = this.container;
+                    container.find("select").eq(0).on("change", function () {
+                        that.setLineWidth($(this).val());
+                    });
+                    container.find("select").eq(1).on("change", function () {
+                        // that.rotate($(this).val())
+                        aiResult = $(this).val();
+
+                    });
+                    container.find(".save-canvas-to-img").on("click", function () {
+
+                        console.log(that.getBase64());
+                        if (that.getBase64()) {
+                            var imgBaseInfo = that.getBase64();
+
+                            sendAnnotationImg(thisIMGInfo, imgBaseInfo, aiResult);
+                        }
+
+
+                        /* if(!that.isMobile){
+                             alert("请按f12打开控制台查看base64图片数据！");
+                         }*/
+                    });
+
+
+                    container.find(".get_blob").on("click", function () {
+                        that.getBlob();
+                    });
+
+                }
+            });
+
+            var canvas = tablet.canvas;
+
+            preImage(`${imgUrl + thisIMGInfo.screenImg}`, function () {
+                // console.log(canvas.width,canvas.height)
+                canvas.getContext("2d").drawImage(this, 0, 0, canvas.width, canvas.height - 150);
+            });
+        }
+
+
+        $('.next').click(function () {
+            nextOne(thisIMGInfo.id,thisIMGInfo.mainId);
+        });
+
+        $('.preview').click(function () {
+            previewOne(thisIMGInfo.id,thisIMGInfo.mainId);
+
+        })
+
+
+
+        if (localStorage.getItem('thisIMGInfo')) {
+            var thisIMGInfo = JSON.parse(localStorage.getItem('thisIMGInfo'));
+
+            if(thisIMGInfo){
+                $('.position').append(`<span style="margin-right: 10px;">坐标:第${thisIMGInfo.colNo}列，第${thisIMGInfo.rowNo}行</span>
+    <span style="margin-right: 10px;">截图位置：${_changeTimeBySecond(thisIMGInfo.location)}</span>
+    <span style="margin-right: 10px;">标注人员：${thisIMGInfo.createUserName}</span>
+    <span style="margin-right: 10px;">标注时间：${createTime(thisIMGInfo.createDate,'y-m-d')}</span>
+    <span style="margin-right: 10px;">AI分析结果：${showAIResult(thisIMGInfo.aiResult)}</span>
+    <span>AI分析故障比例：${showMalfunctionRatio(thisIMGInfo.malfunctionRatio)} </span>`);
+
+
+            $('.container .-canvas-wrapper').css('background', `url(${imgUrl + thisIMGInfo.screenImg})`);
+
+            }
+
+        }
+
+        function preImage(url, callback) {
+            var img = new Image(); //创建一个Image对象，实现图片的预下载
+
+            img.src = url;
+            img.setAttribute('crossOrigin', 'Anonymous');
+            if (img.complete) { // 如果图片已经存在于浏览器缓存，直接调用回调函数
+                callback.call(img);
+                return; // 直接返回，不用再处理onload事件
+            }
+
+            img.onload = function () { //图片下载完毕时异步调用callback函数。
+                callback.call(img);//将回调函数的this替换为Image对象
+            };
+        }
+
+        //上传标注后的图片
+        sendAnnotationImg = (thisIMGInfo, imgBaseInfo, aiResult) => {
+            var imgParams = {
+                "colNo": thisIMGInfo.colNo,//列号
+                "rowNo": thisIMGInfo.rowNo,//行号
+                "mainId": thisIMGInfo.mainId,//任务id
+                "aiResult": aiResult,//AI分析结果:1正常；2：故障
+                "markImg": imgBaseInfo
+            };
+            $.ajax({
+                contentType: 'application/json',
+                type: "post",
+                async: true,
+                url: publicUrl + '/videomana/imagemark.do',
+                headers: {
+                    'loginToken': loginToken
+                },
+                dataType: "json",
+                data: JSON.stringify(imgParams),
+                success: function (res) {
+                    if (res.status == 1) {
+                        console.log(res);
+
+                    } else {
+                        layer.msg(res.message);
+
+                    }
+                },
+                error: function (res) {
+                    layer.msg('服务器请求失败');
+                }
+            });
+
+
+        };
+
+        tablet = new Tablet("#container", {
+            defaultColor: "#ed0c0c",
+            otherHtml: $("#temp").html(),
+            onInit: function () {
+                var that = this,
+                    container = this.container;
+                container.find("select").eq(0).on("change", function () {
+                    that.setLineWidth($(this).val());
+                });
+                container.find("select").eq(1).on("change", function () {
+                    // that.rotate($(this).val())
+                    aiResult = parseInt($(this).val());
+
+                });
+                container.find(".save-canvas-to-img").on("click", function () {
+
+                    console.log(that.getBase64());
+                    if (that.getBase64()) {
+                        var imgBaseInfo = that.getBase64();
+
+                        sendAnnotationImg(thisIMGInfo, imgBaseInfo, aiResult);
+                    }
+
+
+                    /* if(!that.isMobile){
+                         alert("请按f12打开控制台查看base64图片数据！");
+                     }*/
+                });
+
+
+                container.find(".get_blob").on("click", function () {
+                    that.getBlob();
+                });
+
+            }
+        });
+
+        var canvas = tablet.canvas;
+
+        preImage(`${imgUrl + thisIMGInfo.screenImg}`, function () {
+            // console.log(canvas.width,canvas.height)
+            canvas.getContext("2d").drawImage(this, 0, 0, canvas.width, canvas.height - 150);
+        });
+
+
+
+    });
+
+
+</script>
+</body>
+</html>
