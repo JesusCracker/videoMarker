@@ -1,11 +1,25 @@
 ﻿
-var leftList = [{name: "工作台", title: "视频分析记录平台", url: "./workbench.html"},
-    {name: "播放视频", title: "视频分析记录平台", url: "./videoPlay.html"},
-    {name: "标注图像", title: "视频分析记录平台", url: "./annotatedImage.html"},
-    {name: "查看结果", title: "视频分析记录平台", url: "./viewResults.html"},
-    {name: "新增用户", title: "视频分析记录平台", url: "./addUser.html"},
-    {name: "更改密码", title: "视频分析记录平台", url: "./changePWD.html"},
-    {name: "用户管理", title: "视频分析记录平台", url: "./userList.html"}];
+if( localStorage.getItem("name")=='admin'){
+
+    var leftList = [{name: "工作台", title: "视频分析记录平台", url: "./workbench.html"},
+        {name: "播放视频", title: "视频分析记录平台", url: "./videoPlay.html"},
+        {name: "标注图像", title: "视频分析记录平台", url: "./annotatedImage.html"},
+        {name: "查看结果", title: "视频分析记录平台", url: "./viewResults.html"},
+        {name: "新增用户", title: "视频分析记录平台", url: "./addUser.html"},
+        // {name: "更改密码", title: "视频分析记录平台", url: "./changePWD.html"},
+        {name: "用户管理", title: "视频分析记录平台", url: "./userList.html"}];
+
+}
+else{
+
+    var leftList = [{name: "工作台", title: "视频分析记录平台", url: "./workbench.html"},
+        {name: "播放视频", title: "视频分析记录平台", url: "./videoPlay.html"},
+        {name: "标注图像", title: "视频分析记录平台", url: "./annotatedImage.html"},
+        {name: "查看结果", title: "视频分析记录平台", url: "./viewResults.html"},
+        {name: "更改密码", title: "视频分析记录平台", url: "./changePWD.html"}]
+
+
+}
 
 for (var i = 0; i < leftList.length; i++) {
     var li = "";

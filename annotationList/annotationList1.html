@@ -16,6 +16,10 @@
         .layui-form-radio > i:hover, .layui-form-radioed > i {
             color: #1E9FFF !important;
         }
+        .layui-laypage .layui-laypage-curr .layui-laypage-em {
+
+            background-color: #1E9FFF!important;
+        }
     </style>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -333,42 +337,42 @@
             method: 'post',
             url: publicUrl + '/videomana/imageList.do',
             cols: [[
-                {field: 'colNo', unresize: true, align: "center", title: '列号', width: '5%'},
-                {field: 'rowNo', unresize: true, align: "center", title: '行号', width: '5%'},
+                {field: 'colNo', unresize: true, align: "center", title: '列号' },
+                {field: 'rowNo', unresize: true, align: "center", title: '行号'},
                 {
                     field: 'location',
                     unresize: true,
                     align: "center",
                     title: '截图位置(时间戳)',
-                    width: '10%',
+
                     templet: d => {
                         return _changeTimeBySecond(d.location);
 
                     }
                 },
-                {field: 'createUserId', unresize: true, align: "center", title: '标注人员', width: '10%'},
+                {field: 'createUserId', unresize: true, align: "center", title: '标注人员'},
                 {
-                    field: 'createDate', unresize: true, align: "center", title: '标注时间', width: '10%', templet: d => {
+                    field: 'createDate', unresize: true, align: "center", title: '标注时间', templet: d => {
                         return createTime(d.createDate, 'y-m-d')
                     }
                 },
                 {
-                    field: 'originalImg', unresize: true, align: "center", title: '原始图像', width: '10%', templet: d => {
+                    field: 'originalImg', unresize: true, align: "center", title: '原始图像', templet: d => {
                         return showImage(d.originalImg);
                     }
                 },
                 {
-                    field: 'screenImg', unresize: true, align: "center", title: '初筛图像', width: '10%', templet: d => {
+                    field: 'screenImg', unresize: true, align: "center", title: '初筛图像', templet: d => {
                         return showImage(d.screenImg);
                     }
                 },
                 {
-                    field: 'markImg', unresize: true, align: "center", title: '标注图像', width: '10%', templet: d => {
+                    field: 'markImg', unresize: true, align: "center", title: '标注图像', templet: d => {
                         return showImage(d.markImg);
                     }
                 },
                 {
-                    field: 'aiResult', unresize: true, align: "center", title: 'AI分析结果', width: '10%', templet: d => {
+                    field: 'aiResult', unresize: true, align: "center", title: 'AI分析结果', templet: d => {
                         return showResult(d.aiResult);
                     }
                 },
@@ -377,7 +381,7 @@
                     unresize: true,
                     align: "center",
                     title: 'AI分析故障比例',
-                    width: '10%',
+
                     templet: d => {
                         return showRaito(d.malfunctionRatio);
                     }

@@ -95,7 +95,7 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
-            data.field.folderName = 'D://' + folderName;
+            data.field.folderName = filePath + folderName;
             data.field.taskName = folderName;
             data.field.originalImg = base64Source;
             data.field.location = screenShotTime;
