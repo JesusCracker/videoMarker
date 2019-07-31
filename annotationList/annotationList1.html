@@ -13,12 +13,14 @@
             height: 103px !important;
             line-height: 103px !important;
         }
+
         .layui-form-radio > i:hover, .layui-form-radioed > i {
             color: #1E9FFF !important;
         }
+
         .layui-laypage .layui-laypage-curr .layui-laypage-em {
 
-            background-color: #1E9FFF!important;
+            background-color: #1E9FFF !important;
         }
     </style>
     <meta name="renderer" content="webkit">
@@ -59,6 +61,13 @@
                 </div>
             </div>
         </div>
+        <div class="layui-col-xs4">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;text-align: right">
+                <div class="layui-btn layui-btn-normal output2Excel" lay-submit lay-filter="output2Excel"
+                     style="margin-left:0;">导出
+                </div>
+            </div>
+        </div>
         <div class="layui-col-xs1" style="margin-bottom: 5px;margin-top: 5px;margin-left: 30%">
             <div class="back layui-btn layui-btn-normal" onclick="window.history.go(-1)">返回</div>
         </div>
@@ -88,12 +97,12 @@
     {{#  } }}
 
 
-  <!--  <a class="layui-btn layui-btn-normal" lay-event="markImg"
-       style="display: block;margin-top:10px;margin-bottom: 10px;background-color: rgba(0, 204, 102, 1);">
-        <div class="circle2">
-            <span>标注图像</span>
-        </div>
-    </a>-->
+    <!--  <a class="layui-btn layui-btn-normal" lay-event="markImg"
+         style="display: block;margin-top:10px;margin-bottom: 10px;background-color: rgba(0, 204, 102, 1);">
+          <div class="circle2">
+              <span>标注图像</span>
+          </div>
+      </a>-->
     <a class="layui-btn layui-btn-danger" lay-event="remove" style="margin-left:0;display: block;">
         <div class="circle3">
             <span>&nbsp&nbsp删&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp除&nbsp&nbsp&nbsp</span>
@@ -105,11 +114,13 @@
 <script src="../js/config.js"></script>
 <script src="../js/jquery.min.js"></script>
 <script src="../layui/layui.all.js"></script>
+<script src="../js/Export2Excel.js"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 
 <script>
     var nowTime = new Date().valueOf();
     var createDate = '', mainid = 0;
+    var taskCreateDate = '', folderName = '', createUserName = '', status = 0, taskName = '';
 
     //截取url
     function getUrlParam(name) {
@@ -123,9 +134,27 @@
         mainid = getUrlParam('mainid');
     }
 
-    if(getUrlParam('from')=='workBench'){
+
+    if (getUrlParam('folderName')) {
+        folderName = getUrlParam('folderName');
+    }
+
+    if (getUrlParam('createUserName')) {
+        createUserName = getUrlParam('createUserName');
+    }
+
+    if (getUrlParam('status')) {
+        status = getUrlParam('status');
+    }
+
+    if (getUrlParam('taskName')) {
+        taskName = getUrlParam('taskName');
+    }
+
+
+    if (getUrlParam('from') == 'workBench') {
         $('.back').show();
-    }else{
+    } else {
         $('.back').hide();
     }
 
@@ -153,6 +182,11 @@
             str = `${h}:${M}:${s}`
         }
         return str;
+    }
+
+    if (getUrlParam('taskCreateDate')) {
+        taskCreateDate = createTime(parseInt(getUrlParam('taskCreateDate')), 'y-m-d');
+        // console.log(taskCreateDate);
     }
 
     function previewImg(obj) {
@@ -225,6 +259,16 @@
 
     };
 
+    showImageUrl = (imageUrl) => {
+        if (imageUrl == null) {
+            return '-';
+        }
+        if (imageUrl) {
+            return `${imgUrl + imageUrl}`
+        }
+
+    }
+
     //AI分析结果
     showResult = (resultNumber) => {
         var result = '';
@@ -244,6 +288,24 @@
         return result;
     };
 
+
+    changeAIResult = (resultNumber) => {
+        var result = '';
+        if (resultNumber == 0) {
+            result = '-';
+        }
+        if (resultNumber == 1) {
+            result = `正常`;
+        }
+        if (resultNumber == 2) {
+            result = '故障';
+        }
+        if (resultNumber == 3) {
+            result = '未标注';
+        }
+        return result;
+    }
+
     //显示分析故障比例
     showRaito = (rotio) => {
         if (rotio == 0) {
@@ -251,6 +313,15 @@
         }
         else {
             return `<span style="color: #ee4433">${rotio}%</span>`;
+        }
+    };
+
+    changeShowRaito = (rotio) => {
+        if (rotio == 0) {
+            return '-';
+        }
+        else {
+            return `${rotio}%`;
         }
     };
 
@@ -315,11 +386,13 @@
         obj.height = this.document.body.scrollHeight;
     }
 
-
-    layui.use(['table', 'laydate', 'form', 'layer'], function () {
+    layui.config({
+        base: '../js/layui_exts/' //你存放新模块的目录，注意，不是layui的模块目录
+    }).use(['table', 'laydate', 'form', 'layer', 'excel'], function () {
         var table = layui.table,
             laydate = layui.laydate,
             layer = layui.layer,
+            excel = layui.excel,
             form = layui.form;
 
 
@@ -332,12 +405,13 @@
             id: 'taskLists',
             page: true,
             limit: 4,
+
             where: {'mainId': mainid},
             limits: [4, 5, 10, 12, 15],
             method: 'post',
             url: publicUrl + '/videomana/imageList.do',
             cols: [[
-                {field: 'colNo', unresize: true, align: "center", title: '列号' },
+                {field: 'colNo', unresize: true, align: "center", title: '列号'},
                 {field: 'rowNo', unresize: true, align: "center", title: '行号'},
                 {
                     field: 'location',
@@ -350,7 +424,7 @@
 
                     }
                 },
-                {field: 'createUserId', unresize: true, align: "center", title: '标注人员'},
+                {field: 'createUserName', unresize: true, align: "center", title: '标注人员'},
                 {
                     field: 'createDate', unresize: true, align: "center", title: '标注时间', templet: d => {
                         return createTime(d.createDate, 'y-m-d')
@@ -411,7 +485,7 @@
             var data = obj.data;
             //标注，删除
             if (obj.event === 'markImg') {
-                localStorage.setItem('thisIMGInfo',JSON.stringify(data));
+                localStorage.setItem('thisIMGInfo', JSON.stringify(data));
 
                 //阻止tool上绑定的事件和tr上的点击事件冒泡
                 layui.stope(event);
@@ -686,6 +760,116 @@
         $("#col").bind('input propertychange', function () {
             tableReload();
         });
+
+
+        //扩展date方法;
+        Date.prototype.Format = function (fmt) {
+            var o = {
+
+                "M+": this.getMonth() + 1, //月份
+
+                "d+": this.getDate(), //日
+
+                "h+": this.getHours(), //小时
+
+                "m+": this.getMinutes(), //分
+
+                "s+": this.getSeconds(), //秒
+
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+
+                "S": this.getMilliseconds() //毫秒
+            };
+
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 -
+
+                RegExp.$1.length));
+
+            for (var k in o)
+
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ?
+
+                    (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+
+        }
+
+
+        function showStatus(state) {
+            // 状态：1已完成 2未完成 全部不传或传0
+            var result = '';
+            if (state == 1) {
+                result = `已完成`
+            }
+            if (state == 2) {
+                result = `未完成`
+            }
+            return result;
+        }
+
+        status = showStatus(status);
+
+
+        //导出excel
+        form.on('submit(output2Excel)', d => {
+            let data = d.field;
+            data.page = 1;
+            data.limit = 10;
+            data.mainId = mainid;
+            $.ajax({
+                type: "post",
+                async: true,
+                url: publicUrl + `/videomana/imageList.do`,
+                headers: {
+                    'loginToken': loginToken
+                },
+                dataType: "json",
+                data: data,
+                success: function (d) {
+                    if (d.status == 1) {
+                        let res = d.data,
+                            dcList = [];
+
+                        console.log(res);
+
+                        for (var i = 0; i < res.length; i++) {
+                            let arr = {
+                                'colNo': '\t' + res[i].colNo, //  列数
+                                'rowNo': '\t' + res[i].rowNo, //  行数
+                                'location': _changeTimeBySecond(res[i].location), //  播放位置
+                                'createUserName': '\t' + res[i].createUserName, //  用户名
+                                'createDate': createTime(res[i].createDate, 'y-m-d'), //  创建时间
+                                'originalImg': showImageUrl(res[i].originalImg), //  原始图像
+                                'screenImg': showImageUrl(res[i].screenImg), // 初筛图像
+                                'markImg': showImageUrl(res[i].markImg), //  筛查图像
+                                'aiResult': changeAIResult(res[i].aiResult), //  AI分析结果
+                                'malfunctionRatio': changeShowRaito(res[i].malfunctionRatio) //故障百分比
+
+                            }
+
+                            dcList.push(arr);
+                        }
+
+                        let tHeader = [
+                            "列数",
+                            "行数",
+                            '截图位置',
+                            '标注人员',
+                            '标注时间',
+                            '原始图像',
+                            '初筛图像',
+                            '标注图像',
+                            'AI分析结果',
+                            '故障率']
+
+                        export2Excel(tHeader, dcList, `标注任务- ${taskName + '-' + (new Date()).Format("yyyyMMddhhmmssS")} `)
+
+                    } else {
+                        layer.msg(d.message);
+                    }
+                }
+            })
+        })
 
 
     });
