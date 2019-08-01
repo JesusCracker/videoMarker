@@ -814,7 +814,7 @@
         form.on('submit(output2Excel)', d => {
             let data = d.field;
             data.page = 1;
-            data.limit = 10;
+            data.limit = 9999;
             data.mainId = mainid;
             $.ajax({
                 type: "post",

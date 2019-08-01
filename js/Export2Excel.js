@@ -112,7 +112,7 @@ const tableToNotIE = (function() {
         // window.location.href = uri + base64(format(template, ctx))
         link.click();
     }
-})()
+})();
 
 // 导出函数
 const export2Excel = (theadData, tbodyData, dataname) => {

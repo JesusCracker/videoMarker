@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <title>标注图像</title>
     <link rel="stylesheet" href="../layui/css/layui.css">
+    <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+    </style>
 </head>
 <body>
 <div class="layui-fluid" style="    margin-top: 3%;">
@@ -18,15 +29,15 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label" style="width: auto;">行数</label>
                         <div class="layui-input-block" style="margin-left: 0;">
-                            <input type="text" name="rowNo" required lay-verify="required" placeholder="请输入行数"
-                                   autocomplete="off" class="layui-input rowNo">
+                            <input type="number" name="rowNo" required lay-verify="required" placeholder="请输入行数"
+                                   autocomplete="off" class="layui-input rowNo"  style="ime-mode:Disabled" >
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label" style="width: auto;">列数</label>
                         <div class="layui-input-block" style="margin-left: 0;">
-                            <input type="text" name="colNo" required lay-verify="required" placeholder="请输入列数"
-                                   autocomplete="off" class="layui-input colNo">
+                            <input type="number" name="colNo" required lay-verify="required" placeholder="请输入列数"
+                                   autocomplete="off" class="layui-input colNo" style="ime-mode:Disabled">
                         </div>
                     </div>
 
@@ -45,7 +56,30 @@
 <script src="../js/config.js"></script>
 <script src="../js/jquery.min.js"></script>
 <script src="../layui/layui.all.js"></script>
+<script src="../js/js.cookie.js"></script>
+
 <script>
+    //设置默认值
+    let rowCol={},rowNum=0,colNum=0;
+    if(Cookies.get('rowCol')){
+        rowCol=Cookies.getJSON('rowCol');
+        if(rowCol){
+            //行数默认每次是上一次的值-1；列数保存上一次的状态
+            rowNum=rowCol.rowNo;
+            colNum=rowCol.colNo;
+            //行数最小值是1
+            if(rowNum==1){
+                $('.rowNo').val(rowNum);
+                $('.colNo').val(colNum);
+            }
+           else{
+                $('.rowNo').val(rowNum-1);
+                $('.colNo').val(colNum);
+            }
+        }
+
+    }
+
     //获取截取的base64图片
     var base64Source, screenShotTime = 0;
     if (localStorage.getItem('base64IMG')) {
@@ -95,6 +129,12 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
+
+
+            //存储当次的行列数
+            Cookies.set('rowCol',JSON.stringify(data.field));
+
+            //默认监听了行数和列数
             data.field.folderName = filePath + folderName;
             data.field.taskName = folderName;
             data.field.originalImg = base64Source;
@@ -121,10 +161,13 @@
                 async: true,
                 data: JSON.stringify(data.field),
                 dataType: 'json',
+
+
                 beforeSend: function () {
                     loadindex = layer.load(1);  //上传loading
                 },
                 success: function (data) {
+                    // debugger;
                     if (data.status === 1) {
                         layer.msg('保存成功');
                         layer.close(loadindex);
