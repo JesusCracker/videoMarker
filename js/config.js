@@ -9,14 +9,20 @@ var loginToken = localStorage.getItem("loginToken");
 var name = localStorage.getItem("name");
 
 function tuichu() {
-    localStorage.clear();
-    window.location.href = './login.html';
+    layer.msg('登录状态失效', {icon: 5,time:2000},function () {
+        localStorage.clear();
+        window.location.href = './login.html';
+    });
+
     //window.history.back(-1);
 }
 
 function parent_tuichu() {
-    localStorage.clear();
-    top.location.href='../login.html';
+    layer.msg('登录状态失效', {icon: 5,time:2000},function () {
+        localStorage.clear();
+        top.location.href='../login.html';
+    });
+
     // top.location.href = '../login.html';
     // localStorage.clear();
     // window.parent.location.replace('../../readmk_changting/' + index + '.html');
