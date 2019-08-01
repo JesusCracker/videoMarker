@@ -34,7 +34,7 @@
 <form class="layui-form">
     <div class="layui-row">
         <div class="layui-col-xs4">
-            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;text-align: center;">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 15px;text-align: center;">
                 <div class="layui-input-block" style="margin-left:0;">
                     <!--AI分析结果:1正常；2：故障  3：未标注 0或不传查全部-->
                     <input type="radio" name="taskProgress" value="0" title="全部" lay-filter="taskProgress" checked>
@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="layui-col-xs1" style="margin-right: 30px;">
-            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 15px;">
                 <div class="layui-input-block" style="margin-left:0;">
                     <input type="text" class="layui-input" id="col" placeholder="请输入列数" autocomplete="off">
                 </div>
@@ -55,20 +55,20 @@
         </div>
 
         <div class="layui-col-xs1">
-            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 15px;">
                 <div class="layui-input-block" style="margin-left:0;">
                     <input type="text" class="layui-input" id="row" placeholder="请输入行数" autocomplete="off">
                 </div>
             </div>
         </div>
         <div class="layui-col-xs4">
-            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 5px;text-align: right">
+            <div class="layui-form-item" style="margin-bottom: 5px;clear: both;margin-top: 15px;text-align: right">
                 <div class="layui-btn layui-btn-normal output2Excel" lay-submit lay-filter="output2Excel"
-                     style="margin-left:0;">导出
+                     style="margin-left:0;">导出Excel
                 </div>
             </div>
         </div>
-        <div class="layui-col-xs1" style="margin-bottom: 5px;margin-top: 5px;margin-left: 30%">
+        <div class="layui-col-xs1" style="margin-bottom: 5px;margin-top: 15px;margin-left: 3%;">
             <div class="back layui-btn layui-btn-normal" onclick="window.history.go(-1)">返回</div>
         </div>
 
@@ -382,7 +382,7 @@
 
 
     function IFrameResize() {
-        /*var obj = parent.document.getElementById("external-frame"); //取得父页面IFrame对象
+       /* var obj = parent.document.getElementById("external-frame"); //取得父页面IFrame对象
         obj.height = this.document.body.scrollHeight;*/
     }
 

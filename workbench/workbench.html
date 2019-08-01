@@ -225,7 +225,7 @@
 
             $("#biuuu_city_list").empty();
             for (var i = 0; i < param.length; i++) {
-                var str = `<li onclick="linkTask(this)" taskId='${param[i].id}' style='cursor:pointer;text-align: left;margin-top: 10px;'><span class="folderName" style="padding: 20px;">${param[i].folderName}</span></li>`;
+                var str = `<li onclick="linkTask(this)" taskId='${param[i].id}' taskCreateDate='${param[i].createDate}' folderName="${param[i].folderName}" createUserName="${param[i].createUserName}" status="${param[i].status}" taskName="${param[i].taskName}"  style='cursor:pointer;text-align: left;margin-top: 10px;'><span class="folderName" style="padding: 20px;">${param[i].folderName}</span></li>`;
 
                 $("#biuuu_city_list").append(str);
             }
@@ -233,8 +233,13 @@
 
 
         linkTask = (elem) => {
-            var taskId = $(elem).attr('taskId');
-            location.href = `../annotationList/annotationList.html?mainid=${taskId}&from=workBench`;
+            let taskId = $(elem).attr('taskId');
+            let taskCreateDate=$(elem).attr('taskCreateDate');
+            let folderName=$(elem).attr('folderName');
+            let createUserName=$(elem).attr('createUserName');
+            let status=$(elem).attr('status');
+            let taskName=$(elem).attr('taskName');
+            location.href = `../annotationList/annotationList.html?mainid=${taskId}&from=workBench&taskCreateDate=${taskCreateDate}&folderName=${folderName}&createUserName=${createUserName}&status=${status}&taskName=${taskName}`;
         };
 
 
