@@ -16,7 +16,8 @@ function tuichu() {
 
 function parent_tuichu() {
     localStorage.clear();
-    window.location.href = '../login.html';
+    top.location.href='../login.html';
+    // top.location.href = '../login.html';
     // localStorage.clear();
     // window.parent.location.replace('../../readmk_changting/' + index + '.html');
 }

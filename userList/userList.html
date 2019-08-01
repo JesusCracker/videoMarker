@@ -182,7 +182,7 @@
             parseData: function (res) {
                 console.log(res);
 
-                if (res.status == 2) {
+                if (res.status == 2&&res.message=='权限错误') {
                     parent_tuichu()
                 }
                 var num = res.data.length;
@@ -277,7 +277,7 @@
                 method: 'post',
                 url: publicUrl + '/user/userList.do',
                 parseData: function (res) {
-                    if (res.status == 2) {
+                    if (res.status == 2&&res.message=='权限错误') {
                         parent_tuichu()
                     }
                     var num = res.data.length;

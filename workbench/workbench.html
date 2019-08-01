@@ -206,7 +206,7 @@
             headers: {"loginToken": loginToken},
             dataType: "json",
             success: function (res) {
-                if (res.code == 2) {
+                if (res.status == 2&&res.message=='权限错误') {
                     parent_tuichu()
                 }
                 add(res.data);
@@ -265,7 +265,7 @@
                             headers: {"loginToken": loginToken},
                             dataType: "json",
                             success: function (res) {
-                                if (res.code == 2) {
+                                if (res.status == 2&&res.message=='权限错误') {
                                     parent_tuichu()
                                 }
                                 add(res.data);
@@ -287,7 +287,7 @@
             headers: {"loginToken": loginToken},
             dataType: "json",
             success: function (res) {
-                if (res.code == 2) {
+                if (res.status == 2&&res.message=='权限错误') {
                     parent_tuichu()
                 }
                 addData(res.data);
@@ -321,7 +321,7 @@
                             headers: {"loginToken": loginToken},
                             dataType: "json",
                             success: function (res) {
-                                if (res.code == 2) {
+                                if (res.status == 2&&res.message=='权限错误') {
                                     parent_tuichu()
                                 }
                                 addData(res.data);
@@ -389,7 +389,7 @@
             headers: {"loginToken": loginToken},
             dataType: "json",
             success: function (res) {
-                if (res.code == 2) {
+                if (res.status == 2&&res.message=='权限错误') {
                     parent_tuichu()
                 }
               for(let i=0;i<res.data.length;i++){
@@ -405,7 +405,7 @@
                       headers: {"loginToken": loginToken},
                       dataType: "json",
                       success: function (res) {
-                          if (res.code == 2) {
+                          if (res.status == 2&&res.message=='权限错误') {
                               parent_tuichu()
                           }
                       yData.push(res.data.length);
@@ -590,7 +590,7 @@
             headers: {"loginToken": loginToken},
             dataType: "json",
             success: function (res) {
-                if (res.code == 2) {
+                if (res.status == 2&&res.message=='权限错误') {
                     parent_tuichu()
                 }
                 totalTask = res.data;

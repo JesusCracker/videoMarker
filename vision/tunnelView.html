@@ -44,7 +44,7 @@
             headers: {"loginToken": loginToken},
             dataType: "json",
             success: function (res) {
-                if (res.code == 2) {
+                if (res.status == 2&&res.message=='权限错误') {
                     parent_tuichu()
                 }
 
