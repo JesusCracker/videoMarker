@@ -10,7 +10,8 @@
 }
 .title > span {
     font-size: 18px;
-    color: rgba(62,142,247,1);
+    color: rgba(255,255,255,1);
+    font-weight: bold;
 }
 #left_ul{
     margin:0px 40px 0px 20px;
@@ -58,7 +59,7 @@ iframe {
     min-height:100%;
 }
 .layui-header {
-    background: rgba(255,255,255,1) !important;
+    background:rgba(0, 0, 255,0.5)!important;
 }
 .active1 {
     font-size: 18px;
@@ -83,10 +84,10 @@ iframe {
     bottom:0;
 }
 #n-names{
-    color:#ccc;
+    color:#fff;
 }
 .layui-nav .layui-nav-more {
-    border-top-color: #ccc;
+    border-top-color: #fff;
 }
 .layui-nav .layui-nav-mored, .layui-nav-itemed > a .layui-nav-more {
     border-color: transparent transparent #ccc;
