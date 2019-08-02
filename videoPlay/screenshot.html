@@ -139,7 +139,7 @@
                 //默认监听了行数和列数
                 var filePath = Cookies.getJSON('pathInfo').path1All;
                 data.field.folderName = filePath + folderName;
-              
+                console.log(filePath);
 
             } else {
                 layer.msg('请先设置路径', {icon: 5, time: 2000});

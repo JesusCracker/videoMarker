@@ -180,6 +180,8 @@
 
         //如果之前有保存的路径 读取之前保存的路径
         var pathInfo = Cookies.getJSON('pathInfo');
+
+
         if (pathInfo) {
 
             let path1All = pathInfo.path1All;
@@ -212,6 +214,10 @@
 
         //保存路径
         $('.save').click(function () {
+            if (path1 == '') {
+                layer.msg('请选择盘符', {icon: 5, time: 1000});
+                return false;
+            }
             path1Detail = $('.path1Detail').val();
             // path2Detail = $('.path2Detail').val();
             //提交表单数据
