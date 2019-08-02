@@ -88,7 +88,7 @@
                     <div class="layui-col-xs8 verticalCenter"
                          style="text-align: center;border: 1px solid #eee;height: 100px;margin-top: 20px;display: flex;align-items: center; flex-wrap: wrap;flex-direction: column;align-content: center; justify-content: center;">
                         <div class="title">已处理图片数</div>
-                        <div class="processedImageNo">33</div>
+                        <div class="processedImageNo"></div>
                     </div>
                 </div>
             </div>
@@ -211,7 +211,7 @@
                 }
                 add(res.data);
                 var count = res.dataTotal;
-                $('.analysedVideoNo').text(count);
+
 
                 fenye(count);
             },
@@ -381,49 +381,42 @@
         var mainIDs=[];
         var xData = [];//任务名称
         var yData = [];//里面的图片数量
+        var analyzedVideo,completionRate,processedImage,topFiveList;
 
+        //获取图标里面的所有数据
         $.ajax({
             type: "post",
             async: false,
-            url: publicUrl + "/videomana/taskList.do?page=1&limit=5",
+            url: publicUrl + `/videomana/workbench.do`,
             headers: {"loginToken": loginToken},
             dataType: "json",
             success: function (res) {
                 if (res.status == 2&&res.message=='权限错误') {
                     parent_tuichu()
                 }
-              for(let i=0;i<res.data.length;i++){
-                  xData.push(res.data[i].taskName);
-                  mainIDs.push(res.data[i].id);
-              }
-
-              for(let i=0;i<mainIDs.length;i++){
-                  $.ajax({
-                      type: "post",
-                      async: false,
-                      url: publicUrl + `/videomana/imageList.do?page=1&limit=9999&mainId=${mainIDs[i]}`,
-                      headers: {"loginToken": loginToken},
-                      dataType: "json",
-                      success: function (res) {
-                          if (res.status == 2&&res.message=='权限错误') {
-                              parent_tuichu()
-                          }
-                      yData.push(res.data.length);
+                if(res.status==1){
+                   var totalData=res.data;
+                    analyzedVideo=totalData.analyzedVideo;
+                    completionRate=totalData.completionRate;
+                    processedImage=totalData.processedImage;
+                    topFiveList=totalData.topFiveList;
+                    $('.analysedVideoNo').text(analyzedVideo);
+                    $('.processedImageNo').text(processedImage);
 
 
-                      },
-                      error: function (res) {
-                          layer.msg(res.message);
-                      }
-                  });
+                    for(let i=0;i<topFiveList.length;i++){
+                        xData.push(topFiveList[i].taskName);
+                        yData.push(topFiveList[i].aiResult);
+                    }
+                }
 
-              }
 
             },
             error: function (res) {
                 layer.msg(res.message);
             }
         });
+
 
 
         option = {
@@ -610,11 +603,11 @@
             }
         });
 
-        var value = finishedTask.length/totalTask.length; //百分数
+        var value = completionRate; //百分数
 
 
         var myChart1 = echarts.init(document.getElementById('main1'));
-        var data = [value, value, value, value, value, ];
+        var data = [value/100, value/100, value/100, value/100, value/100, ];
         var option1 = {
             backgroundColor: '#fff',
 
@@ -646,7 +639,7 @@
                 },
                 label: {
                     normal: {
-                        formatter: (value * 100).toFixed(2) + '%',
+                        formatter: (value).toFixed(2) + '%',
                         textStyle: {
                             fontSize: 20
                         }
