@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>设置工作路径</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+    <!--<link rel="stylesheet" href="../css/font-awesome.min.css">-->
+    <!--<link rel="stylesheet" href="../css/cropper.css">-->
+    <!--<link rel="stylesheet" href="../css/sitelogo.css">-->
+
+
+    <style>
+        .layui-form-radio > i:hover, .layui-form-radioed > i {
+            color: #1E9FFF;
+        }
+
+        .red {
+            color: #e43;
+        }
+
+        .layui-form-item {
+            margin-bottom: 40px;
+            clear: both;
+        }
+
+        .btns {
+            width: 225px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .headIco {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #eee;
+            float: left;
+            margin-right: 3%;
+            margin-bottom: 60px;
+            position: relative
+        }
+
+        .signIco {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #eee;
+            float: left;
+            margin-right: 3%;
+            position: relative;
+        }
+
+        .chooseItems {
+            margin: 0 auto;
+            width: 325px;
+            margin-bottom: 4px;
+        }
+
+        .ModalBtns {
+            width: 200px;
+            margin: 0 auto;
+            margin-top: 15px;
+        }
+
+        .layui-form-label {
+            width: 110px;
+        }
+
+        .layui-form-item .layui-input-inline {
+            float: left;
+            width: 19rem;
+            margin-right: 10px;
+        }
+
+        .layui-select-title {
+            width: 19.5rem
+        }
+    </style>
+</head>
+<body onload="IFrameResize()">
+
+<div class="layui-fluid">
+    <div class="layui-card" style="    margin-top: 50px;">
+        <div class="layui-card-body">
+
+
+            <form class="layui-form" action="" lay-filter="component-form-group">
+                <div class="layui-row">
+                    <div class="layui-form-item">
+                        <div class="layui-col-xs3">
+                            <label class="layui-form-label">设置路径：</label>
+                            <div class="layui-input-block">
+                                <select name="city" lay-verify="required" lay-search lay-filter="path1" class="path1">
+                                    <option value="">请选择盘符</option>
+                                    <option value="C:\">C:\</option>
+                                    <option value="D:\">D:\</option>
+                                    <option value="E:\">E:\</option>
+                                    <option value="F:\">F:\</option>
+                                    <option value="G:\">G:\</option>
+                                    <option value="H:\">H:\</option>
+                                    <option value="I:\">I:\</option>
+                                    <option value="J:\">J:\</option>
+                                    <option value="K:\">K:\</option>
+                                    <option value="L:\">L:\</option>
+                                    <option value="M:\">M:\</option>
+                                    <option value="N:\">N:\</option>
+                                    <option value="O:\">O:\</option>
+                                    <option value="P:\">P:\</option>
+                                    <option value="Q:\">Q:\</option>
+                                    <option value="R:\">R:\</option>
+                                    <option value="S:\">S:\</option>
+                                    <option value="T:\">T:\</option>
+                                    <option value="U:\">U:\</option>
+                                    <option value="V:\">V:\</option>
+                                    <option value="W:\">W:\</option>
+                                    <option value="X:\">X:\</option>
+                                    <option value="Y:\">Y:\</option>
+                                    <option value="Z:\">Z:\</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6">
+                            <div class="layui-input-block" style="margin-left: 10px;">
+                                <input type="text" name="path1Detail" required lay-verify="required"
+                                       placeholder="请输入视频文件夹的父级文件夹路径，如：assets/videoItems/"
+                                       autocomplete="off" class="layui-input path1Detail">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div style='clear:both;'></div>
+        </div>
+
+
+        <div class="btns">
+            <button class="layui-btn layui-btn-normal save  layui-btn-radius">确&nbsp&nbsp&nbsp&nbsp认</button>
+            <button style="margin-left: 25px;" class="layui-btn layui-btn-normal remove layui-btn-radius">
+                清&nbsp&nbsp&nbsp&nbsp除
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<div class="loading" aria-label="Loading" role="img" tabindex="-1"></div>
+
+<script src="../js/config.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../layui/layui.js"></script>
+<script src="../js/html2canvas.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/js.cookie.js"></script>
+
+
+<script>
+
+    function IFrameResize() {
+        var obj = parent.document.getElementById("external-frame"); //取得父页面IFrame对象
+        obj.height = this.document.body.scrollHeight;
+    }
+
+
+    layui.config({
+        version: true,
+        base: '../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['form', 'jquery', 'layer'], function () {
+        var $ = layui.jquery
+            , layer = layui.layer
+            , form = layui.form;
+
+
+        //如果之前有保存的路径 读取之前保存的路径
+        var pathInfo = Cookies.getJSON('pathInfo');
+        if (pathInfo) {
+
+            let path1All = pathInfo.path1All;
+            // let path2All = pathInfo.path2All;
+            //获取盘符
+            let path1DiskName = path1All.substring(0, 3);
+            // let path2DiskName = path2All.substring(0, 3);
+
+            //获取盘符后的文件夹名
+            let path1FileName = path1All.substring(3);
+            // let path2FileName = path2All.substring(3);
+
+            $('.path1').val(path1DiskName);
+            // $('.path2').val(path2DiskName);
+            $('.path1Detail').val(path1FileName);
+            // $('.path2Detail').val(path2FileName);
+            form.render();
+        }
+
+
+        //监听选择的盘符
+        var path1 = '', path2 = '', path1Detail = '', path2Detail = '';
+        form.on('select(path1)', function (data) {
+            path1 = data.value;
+        });
+
+        /*  form.on('select(path2)', function (data) {
+              path2 = data.value;
+          });*/
+
+        //保存路径
+        $('.save').click(function () {
+            path1Detail = $('.path1Detail').val();
+            // path2Detail = $('.path2Detail').val();
+            //提交表单数据
+            var params = {
+                'path1All': path1 + path1Detail,
+                // 'path2All': path2 + path2Detail,
+            };
+            layer.msg('保存成功', {icon: 1, time: 1000}, function () {
+                Cookies.set('pathInfo', JSON.stringify(params));
+
+            });
+
+        });
+
+        //清除路径
+        $('.remove').click(function () {
+            layer.msg('清除成功', {icon: 1, time: 1000}, function () {
+                Cookies.remove('pathInfo');
+                window.location.reload();
+            });
+
+        })
+    });
+
+
+</script>
+</body>
+</html>

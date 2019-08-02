@@ -254,12 +254,11 @@
 
             }
             else if (obj.event === 'seeDetail') {
-                console.log(data);
 
                 //阻止tool上绑定的事件和tr上的点击事件冒泡
                 layui.stope(event);
 
-                location.href = `../annotationList/annotationList1.html?mainid=${data.id}&taskCreateDate=${data.createDate}&folderName=${data.folderName}&createUserName=${data.createUserName}&status=${data.status}&taskName=${data.taskName}`;
+                location.href = `../annotationList/annotationList1.html?mainid=${data.id}&taskCreateDate=${data.createDate}&createUserName=${data.createUserName}&status=${data.status}&taskName=${data.taskName}&folderName=${data.folderName}`;
 
             } else if (obj.event === 'remove') {
                 layui.stope(event);

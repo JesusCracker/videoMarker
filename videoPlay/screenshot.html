@@ -30,7 +30,7 @@
                         <label class="layui-form-label" style="width: auto;">行数</label>
                         <div class="layui-input-block" style="margin-left: 0;">
                             <input type="number" name="rowNo" required lay-verify="required" placeholder="请输入行数"
-                                   autocomplete="off" class="layui-input rowNo"  style="ime-mode:Disabled" >
+                                   autocomplete="off" class="layui-input rowNo" style="ime-mode:Disabled">
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -44,7 +44,7 @@
                     <div class="layui-form-item">
                         <div class="layui-input-block" style="margin-left: 0;">
                             <button class="layui-btn" id="submitt" lay-submit lay-filter="submit">立即提交</button>
-                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            <button type="reset" class="layui-btn layui-btn-primary reset">重置</button>
                         </div>
                     </div>
                 </form>
@@ -60,25 +60,29 @@
 
 <script>
     //设置默认值
-    let rowCol={},rowNum=0,colNum=0;
-    if(Cookies.get('rowCol')){
-        rowCol=Cookies.getJSON('rowCol');
-        if(rowCol){
+    let rowCol = {}, rowNum = 0, colNum = 0;
+    if (Cookies.get('rowCol')) {
+        rowCol = Cookies.getJSON('rowCol');
+        if (rowCol) {
             //行数默认每次是上一次的值-1；列数保存上一次的状态
-            rowNum=rowCol.rowNo;
-            colNum=rowCol.colNo;
+            rowNum = rowCol.rowNo;
+            colNum = rowCol.colNo;
             //行数最小值是1
-            if(rowNum==1){
+            if (rowNum == 1) {
                 $('.rowNo').val(rowNum);
                 $('.colNo').val(colNum);
             }
-           else{
-                $('.rowNo').val(rowNum-1);
+            else {
+                $('.rowNo').val(rowNum - 1);
                 $('.colNo').val(colNum);
             }
         }
-
     }
+
+
+    $('.reset').click(function () {
+        Cookies.remove('rowCol');
+    });
 
     //获取截取的base64图片
     var base64Source, screenShotTime = 0;
@@ -98,17 +102,14 @@
         return null; //返回参数值
     }
 
-    function SetCookie(sName, sValue)
-    {
+    function SetCookie(sName, sValue) {
         document.cookie = sName + "=" + escape(sValue) + ";";
     }
 
-    function GetCookie(sName)
-    {
+    function GetCookie(sName) {
         // cookies are separated by semicolons
         var aCookie = document.cookie.split(";");
-        for (var i=0; i < aCookie.length; i++)
-        {
+        for (var i = 0; i < aCookie.length; i++) {
             // a name/value pair (a crumb) is separated by an equal sign
             var aCrumb = aCookie[i].split("=");
             if (sName == aCrumb[0])
@@ -117,7 +118,6 @@
         // a cookie with the requested name does not exist
         return null;
     }
-
 
 
     //文件夹名称
@@ -132,25 +132,33 @@
 
 
             //存储当次的行列数
-            Cookies.set('rowCol',JSON.stringify(data.field));
+            Cookies.set('rowCol', JSON.stringify(data.field));
 
-            //默认监听了行数和列数
-            data.field.folderName = filePath + folderName;
+
+            if (Cookies.getJSON('pathInfo')) {
+                //默认监听了行数和列数
+                var filePath = Cookies.getJSON('pathInfo').path1All;
+                data.field.folderName = filePath + folderName;
+              
+
+            } else {
+                layer.msg('请先设置路径', {icon: 5, time: 2000});
+                return false;
+            }
             data.field.taskName = folderName;
             data.field.originalImg = base64Source;
             data.field.location = screenShotTime;
 
-        /*    var c=GetCookie('win1');
-            if(c==null || c=='closed')
-            {
-                if (window != top) {
-                    top.open('../annotationList/annotationList.html','win1');
-                    // top.location.href='../annotationList/annotationList.html'
-                }
-                // window.open("page1.html","win1");
-                SetCookie('win1','opened');
-            }*/
-
+            /*    var c=GetCookie('win1');
+                if(c==null || c=='closed')
+                {
+                    if (window != top) {
+                        top.open('../annotationList/annotationList.html','win1');
+                        // top.location.href='../annotationList/annotationList.html'
+                    }
+                    // window.open("page1.html","win1");
+                    SetCookie('win1','opened');
+                }*/
 
 
             $.ajax({
@@ -172,7 +180,7 @@
                         layer.msg('保存成功');
                         layer.close(loadindex);
                         if (window != top) {
-                            top.open(`../annotationList/annotationList.html?mainid=${data.data}`,'win1');
+                            top.open(`../annotationList/annotationList.html?mainid=${data.data}`, 'win1');
                             // top.location.href='../annotationList/annotationList.html'
                         }
                     } else {

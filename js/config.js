@@ -1,7 +1,7 @@
 // JavaScript source code
 const publicUrl = "http://www.aisono.cn/videoAnal";
 const imgUrl='http://www.aisono.cn/fileupload';
-const filePath='F://';
+// const filePath=Cookies.getJSON('pathInfo');
 
 
 var loginToken = localStorage.getItem("loginToken");

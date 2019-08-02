@@ -2,6 +2,7 @@
 if( localStorage.getItem("name")=='admin'){
 
     var leftList = [{name: "工作台", title: "视频分析记录平台", url: "./workbench.html"},
+        {name: "设置工作路径", title: "设置工作路径", url: "./setWorkPath.html"},
         {name: "播放视频", title: "视频分析记录平台", url: "./videoPlay.html"},
         {name: "标注图像", title: "视频分析记录平台", url: "./annotatedImage.html"},
         {name: "查看结果", title: "视频分析记录平台", url: "./viewResults.html"},
@@ -13,6 +14,7 @@ if( localStorage.getItem("name")=='admin'){
 else{
 
     var leftList = [{name: "工作台", title: "视频分析记录平台", url: "./workbench.html"},
+        {name: "设置工作路径", title: "设置工作路径", url: "./setWorkPath.html"},
         {name: "播放视频", title: "视频分析记录平台", url: "./videoPlay.html"},
         {name: "标注图像", title: "视频分析记录平台", url: "./annotatedImage.html"},
         {name: "查看结果", title: "视频分析记录平台", url: "./viewResults.html"},

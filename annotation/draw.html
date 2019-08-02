@@ -2,7 +2,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <head>
-
+    <style>
+        .position{
+            text-align: center;
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 23px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+    </style>
     <title>画图板</title>
     <script src="../js/config.js"></script>
     <script src='../js/jquery.min.js'></script>
@@ -149,13 +164,13 @@
                     return '正常';
                 }
                 if (resultNum == 2) {
-                    return '故障';
+                    return `<span style="color: #ee4433;">故障</span>`;
                 }
             };
 
             showMalfunctionRatio = (malfunctionRatio) => {
                 if (malfunctionRatio != 0) {
-                    return `${malfunctionRatio}%`;
+                    return `<span style="color: #ee4433;">${malfunctionRatio}%</span>`;
                 }
                 else {
                     return '-';
@@ -170,7 +185,7 @@
 
 
         var drawImage = function () {
-            var url = `${imgUrl + thisIMGInfo.screenImg}`;
+            var url = `${imgUrl + thisIMGInfo.originalImg}`;
             var image1 = new Image();
             image1.src = url;
             image1.onload = function () {
@@ -220,6 +235,9 @@
                         dataType: "json",
                         data: JSON.stringify(imgParams_erroer),
                         success: function (res) {
+                            if (res.status == 2 && res.message == '权限错误') {
+                                parent_tuichu();
+                            }
                             if (res.status == 1) {
                                 layer.msg('提交成功', {icon: 1, time: 1000}, function () {
                                     layer.closeAll();
@@ -369,6 +387,9 @@
                 dataType: "json",
                 data: JSON.stringify(imgParams_erroer),
                 success: function (res) {
+                    if (res.status == 2 && res.message == '权限错误') {
+                        parent_tuichu();
+                    }
                     if (res.status == 1) {
                         layer.msg('提交成功', {icon: 1, time: 1000}, function () {
                             layer.closeAll();
@@ -462,10 +483,10 @@
     <input name="sex" type="radio">女
 </div>-->
 
-<div style="float:left;width:30%; position: absolute;" onclick="hide();">
+<div style="float:left;width:30%;top: 20px; position: absolute;" onclick="hide();">
     <div id="dedit" class="box">
     </div>
-    <div id="container">
+    <div id="container" >
         <canvas id="canvas_bak"></canvas>
         <canvas id="canvas">
             浏览器不支持哦，亲
@@ -509,7 +530,7 @@
 </div>
 
 
-<div class="position" style="text-align: center;  top: 87%;"></div>
+<div class="position" ></div>
 
 <div class="layui-row" style="margin-bottom: 30px;    margin-top: 650px;">
     <div class="layui-col-xs2" style="text-align: right">
@@ -523,46 +544,6 @@
 </div>
 
 <script>
-
-/*
-    //判断前面或者后面是否还有图片
-    juggIsContainPreviewOrNext = (id, mainid) => {
-        var messages='';
-        $.ajax({
-            type: "post",
-            async: true,
-            url: publicUrl + '/videomana/previousImage.do',
-            headers: {
-                'loginToken': loginToken
-            },
-            data: {
-                'id': id,
-                'mainId': mainid
-            },
-            success: function (res) {
-                res = JSON.parse(res);
-                console.log(res);
-
-                if (res.data == null) {
-                    layer.msg('没图片了');
-                    messages='没图';
-                    // return false;
-                }
-
-                if (res.data != null) {
-                    messages='有图';
-                    // return true;
-                }
-                return messages;
-
-            },
-            error: function (res) {
-                layer.msg('服务器请求失败');
-            }
-        });
-    };
-*/
-
 
     refreshInfo = () => {
         window.location.reload();
@@ -603,6 +584,9 @@
             },
             success: function (res) {
                 res = JSON.parse(res);
+                if (res.status == 2 && res.message == '权限错误') {
+                    parent_tuichu();
+                }
                 if (res.status == 1) {
                     if (res.data == null) {
                         layer.msg('往前没有更多图片了哦');
@@ -640,6 +624,9 @@
                 'mainId': mainid
             },
             success: function (res) {
+                if (res.status == 2 && res.message == '权限错误') {
+                    parent_tuichu();
+                }
                 res = JSON.parse(res);
                 if (res.status == 1) {
 

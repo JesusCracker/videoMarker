@@ -436,13 +436,13 @@
                     }
                 },
                 {
-                    field: 'screenImg', unresize: true, align: "center", title: '初筛图像', templet: d => {
-                        return showImage(d.screenImg);
+                    field: 'markImg', unresize: true, align: "center", title: '初筛图像', templet: d => {
+                        return showImage(d.markImg);
                     }
                 },
                 {
-                    field: 'markImg', unresize: true, align: "center", title: '标注图像', templet: d => {
-                        return showImage(d.markImg);
+                    field: 'screenImg', unresize: true, align: "center", title: '结果图像', templet: d => {
+                        return showImage(d.screenImg);
                     }
                 },
                 {
@@ -483,6 +483,7 @@
 
         table.on('tool(taskList)', function (obj) {
             var data = obj.data;
+
             //标注，删除
             if (obj.event === 'markImg') {
                 localStorage.setItem('thisIMGInfo', JSON.stringify(data));
@@ -830,7 +831,7 @@
                         let res = d.data,
                             dcList = [];
 
-                        console.log(res);
+
 
                         for (var i = 0; i < res.length; i++) {
                             let arr = {
@@ -840,8 +841,8 @@
                                 'createUserName': '\t' + res[i].createUserName, //  用户名
                                 'createDate': createTime(res[i].createDate, 'y-m-d'), //  创建时间
                                 'originalImg': showImageUrl(res[i].originalImg), //  原始图像
-                                'screenImg': showImageUrl(res[i].screenImg), // 初筛图像
-                                'markImg': showImageUrl(res[i].markImg), //  筛查图像
+                                'markImg': showImageUrl(res[i].markImg), //标注图像
+                                'screenImg': showImageUrl(res[i].screenImg), //  结果图像
                                 'aiResult': changeAIResult(res[i].aiResult), //  AI分析结果
                                 'malfunctionRatio': changeShowRaito(res[i].malfunctionRatio) //故障百分比
 
@@ -857,12 +858,12 @@
                             '标注人员',
                             '标注时间',
                             '原始图像',
-                            '初筛图像',
                             '标注图像',
+                            '结果图像',
                             'AI分析结果',
                             '故障率']
 
-                        export2Excel(tHeader, dcList, `标注任务- ${taskName + '-' + (new Date()).Format("yyyyMMddhhmmssS")} `)
+                        export2Excel(tHeader, dcList, `标注任务-${taskName + '-' + (new Date()).Format("yyyyMMddhhmmssS")} `)
 
                     } else {
                         layer.msg(d.message);
