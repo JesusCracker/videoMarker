@@ -240,9 +240,10 @@
                             }
                             if (res.status == 1) {
                                 layer.msg('提交成功', {icon: 1, time: 1000}, function () {
-                                    layer.closeAll();
+                                   /* layer.closeAll();
                                     parent.layer.closeAll();
-                                    window.parent.location.reload();
+                                    window.parent.location.reload();*/
+                                   $('.next').click();
                                 });
 
                             } else {
@@ -392,9 +393,10 @@
                     }
                     if (res.status == 1) {
                         layer.msg('提交成功', {icon: 1, time: 1000}, function () {
-                            layer.closeAll();
+                          /*  layer.closeAll();
                             parent.layer.closeAll();
-                            window.parent.location.reload();
+                            window.parent.location.reload();*/
+                            $('.next').click();
                         });
 
                     } else {

@@ -491,7 +491,7 @@
                 localStorage.setItem('thisIMGInfo', JSON.stringify(data));
 
                 //阻止tool上绑定的事件和tr上的点击事件冒泡
-                layui.stope(event);
+                // layui.stope(event);
                 layer.open({
                     type: 2,
                     area: ['100%', '100%'],
@@ -501,7 +501,9 @@
                     btnAlign: "c",
                     btn: "关闭",
                     yes: function () {
-                        layer.closeAll();
+                        window.parent.location.reload();
+                        // layer.closeAll();
+                        // alert('xxx');
 
                     }
                 });

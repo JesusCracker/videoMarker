@@ -8,6 +8,7 @@
             text-align: center;
         }
     </style>
+    <link rel="shortcut icon" href="../img/tunnelIcon.png" >
     <link rel="stylesheet" href="../layui/css/layui.css">
     <!-- 引入 echarts.js -->
     <script src="../js/config.js"></script>
@@ -153,7 +154,7 @@
                 min: 1,
                 max: 110,
                 axisLabel: {
-                    formatter: '{value} 行'
+                    formatter: '{value} 列'
                 },
                 nameTextStyle: {
                     color: '#3259B8',
@@ -177,7 +178,7 @@
                 min: 1,
                 max: 53,
                 axisLabel: {
-                    formatter: '{value}列'
+                    formatter: '{value}行'
                 },
                 nameTextStyle: {
                     color: '#3259B8',
@@ -224,7 +225,7 @@
                     formatter: function (params) {
                         if (params.value.length > 1) {
                             return '这根管道是: ' + ' <br/>' +
-                                params.value[0] + '行' + ' ' + params.value[1] + '列'+  ' <br/>' +'  ' + getPercentFailure(params.value[2]);
+                                params.value[0] + '列' + ' ' + params.value[1] + '行'+  ' <br/>' +'  ' + getPercentFailure(params.value[2]);
                         }
 
                     },
