@@ -97,30 +97,30 @@
                             <div class="layui-input-block">
                                 <select name="city" lay-verify="required" lay-search lay-filter="path1" class="path1">
                                     <option value="">请选择盘符</option>
-                                    <option value="C:\">C:\</option>
-                                    <option value="D:\">D:\</option>
-                                    <option value="E:\">E:\</option>
-                                    <option value="F:\">F:\</option>
-                                    <option value="G:\">G:\</option>
-                                    <option value="H:\">H:\</option>
-                                    <option value="I:\">I:\</option>
-                                    <option value="J:\">J:\</option>
-                                    <option value="K:\">K:\</option>
-                                    <option value="L:\">L:\</option>
-                                    <option value="M:\">M:\</option>
-                                    <option value="N:\">N:\</option>
-                                    <option value="O:\">O:\</option>
-                                    <option value="P:\">P:\</option>
-                                    <option value="Q:\">Q:\</option>
-                                    <option value="R:\">R:\</option>
-                                    <option value="S:\">S:\</option>
-                                    <option value="T:\">T:\</option>
-                                    <option value="U:\">U:\</option>
-                                    <option value="V:\">V:\</option>
-                                    <option value="W:\">W:\</option>
-                                    <option value="X:\">X:\</option>
-                                    <option value="Y:\">Y:\</option>
-                                    <option value="Z:\">Z:\</option>
+                                    <option value="C:/">C:/</option>
+                                    <option value="D:/">D:/</option>
+                                    <option value="E:/">E:/</option>
+                                    <option value="F:/">F:/</option>
+                                    <option value="G:/">G:/</option>
+                                    <option value="H:/">H:/</option>
+                                    <option value="I:/">I:/</option>
+                                    <option value="J:/">J:/</option>
+                                    <option value="K:/">K:/</option>
+                                    <option value="L:/">L:/</option>
+                                    <option value="M:/">M:/</option>
+                                    <option value="N:/">N:/</option>
+                                    <option value="O:/">O:/</option>
+                                    <option value="P:/">P:/</option>
+                                    <option value="Q:/">Q:/</option>
+                                    <option value="R:/">R:/</option>
+                                    <option value="S:/">S:/</option>
+                                    <option value="T:/">T:/</option>
+                                    <option value="U:/">U:/</option>
+                                    <option value="V:/">V:/</option>
+                                    <option value="W:/">W:/</option>
+                                    <option value="X:/">X:/</option>
+                                    <option value="Y:/">Y://option>
+                                    <option value="Z:/">Z:/</option>
                                 </select>
                             </div>
                         </div>
@@ -187,7 +187,7 @@
             let path1All = pathInfo.path1All;
             // let path2All = pathInfo.path2All;
             //获取盘符
-            let path1DiskName = path1All.substring(0, 3);
+            var path1DiskName = path1All.substring(0, 3);
             // let path2DiskName = path2All.substring(0, 3);
 
             //获取盘符后的文件夹名
@@ -214,7 +214,8 @@
 
         //保存路径
         $('.save').click(function () {
-            if (path1 == '') {
+
+            if($('.path1').val()==''){
                 layer.msg('请选择盘符', {icon: 5, time: 1000});
                 return false;
             }

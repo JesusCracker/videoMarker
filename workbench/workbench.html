@@ -75,7 +75,7 @@
     background-size: auto 100%;margin-top:3.5%">
 
         </div>
-        <div class="layui-col-xs5">
+        <div class="layui-col-xs5" style="margin-top:3.5%">
             <div class="layui-col-xs4">
                 <div class="layui-row ">
                     <div class="layui-col-xs8 verticalCenter"
@@ -97,7 +97,7 @@
 
             </div>
         </div>
-        <div class="layui-col-xs3">
+        <div class="layui-col-xs3" style="margin-top:3.5%">
             <div id="main1" style="height:260px; margin:  0 auto;"></div>
         </div>
     </div>
@@ -574,34 +574,6 @@
 
         //百分比进度图
         //获取百分比
-        var totalTask = [], finishedTask = [], unfinishedTask = [];
-        // 1已完成 2未完成 全部不传或传0
-        $.ajax({
-            type: "post",
-            async: false,
-            url: publicUrl + "/videomana/taskList.do?page=1&limit=99999",
-            headers: {"loginToken": loginToken},
-            dataType: "json",
-            success: function (res) {
-                if (res.status == 2&&res.message=='权限错误') {
-                    parent_tuichu()
-                }
-                totalTask = res.data;
-                for (let i = 0; i < totalTask.length; i++) {
-                    if(totalTask[i].status==1){
-                        finishedTask.push(totalTask[i]);
-                    }
-                    if(totalTask[i].status==0){
-                        unfinishedTask.push(totalTask[i])
-                    }
-                }
-
-
-            },
-            error: function (res) {
-                layer.msg(res.message);
-            }
-        });
 
         var value = completionRate; //百分数
 
