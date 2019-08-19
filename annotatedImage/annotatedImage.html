@@ -250,7 +250,7 @@
             if (obj.event === 'playVideo') {
                 //阻止tool上绑定的事件和tr上的点击事件冒泡
                 layui.stope(event);
-                console.log(data);
+                // console.log(data);
 
             }
             else if (obj.event === 'seeDetail') {
@@ -345,7 +345,7 @@
             var taskProgress = $("input[type='radio']:checked").val();
             var taskOwner = $("select[name=taskOwner]").val();
             var createDate = $("#dateChoose").val();
-            console.log(taskProgress,taskOwner,createDate);
+            // console.log(taskProgress,taskOwner,createDate);
 
 
             if (taskProgress && taskOwner != '' && createDate != '') {

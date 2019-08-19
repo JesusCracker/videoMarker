@@ -328,7 +328,7 @@
                     });
                     container.find(".save-canvas-to-img").on("click", function () {
 
-                        console.log(that.getBase64());
+                        // console.log(that.getBase64());
                         if (that.getBase64()) {
                             var imgBaseInfo = that.getBase64();
 
@@ -423,7 +423,7 @@
                 data: JSON.stringify(imgParams),
                 success: function (res) {
                     if (res.status == 1) {
-                        console.log(res);
+                        // console.log(res);
 
                     } else {
                         layer.msg(res.message);
@@ -454,7 +454,7 @@
                 });
                 container.find(".save-canvas-to-img").on("click", function () {
 
-                    console.log(that.getBase64());
+                    // console.log(that.getBase64());
                     if (that.getBase64()) {
                         var imgBaseInfo = that.getBase64();
 

@@ -239,7 +239,7 @@
     //获取当前用户的信息
     if (getUrlParam('getUserInfo')) {
         var userInfo = JSON.parse(localStorage.getItem('userInfo'));
-        console.log(userInfo);
+        // console.log(userInfo);
 
         $('#passwordArea').hide();
         $('.userName').val(userInfo.name);

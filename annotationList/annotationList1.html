@@ -137,7 +137,7 @@
 
     if (getUrlParam('folderName')) {
         folderName = getUrlParam('folderName');
-        console.log(folderName);
+        // console.log(folderName);
 
     }
 
@@ -485,7 +485,7 @@
 
         table.on('tool(taskList)', function (obj) {
             var data = obj.data;
-            console.log(data);
+            // console.log(data);
             //标注，删除
             if (obj.event === 'markImg') {
                 localStorage.setItem('thisIMGInfo', JSON.stringify(data));
@@ -835,7 +835,7 @@
                         let res = d.data,
                             dcList = [];
 
-                        console.log(res);
+                        // console.log(res);
 
                         for (var i = 0; i < res.length; i++) {
                             let arr = {

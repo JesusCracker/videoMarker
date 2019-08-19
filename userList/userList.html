@@ -180,7 +180,7 @@
                 {unresize: true, align: "center", title: '操作', toolbar: '#opreation'}
             ]],
             parseData: function (res) {
-                console.log(res);
+                // console.log(res);
 
                 if (res.status == 2&&res.message=='权限错误') {
                     parent_tuichu()
@@ -282,7 +282,7 @@
                     }
                     var num = res.data.length;
                     var height = 55 * num + 4;
-                    console.log(height)
+                    // console.log(height)
                     $(".layui-table-body").css("height", height + "px");
                     IFrameResize();
                     count = res.count;
