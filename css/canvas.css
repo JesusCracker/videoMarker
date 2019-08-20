@@ -11,6 +11,7 @@ canvas {
 	z-index : 0;
 	left:70px;
 	top:20px;
+	left: 0;
 } 
 
 .box {
@@ -20,10 +21,12 @@ canvas {
 	position: absolute;
 	left:70px;
 	top:20px;
+	left: 0;
 }
 
 #container {
 	position: absolute;
+	width: 1100px;
 }
 
 .textbox {
@@ -34,9 +37,11 @@ canvas {
 
 #drawController{
 	position: absolute;
-	left:100px;
+	/*left:100px;*/
 	top:35px;
 	width : 40px;
+	left: 50%;
+	margin-left: -600px;
 }
 
 .border_nochoose {

@@ -18,7 +18,7 @@
             width: 100%;
         }
     </style>
-    <title>画图板</title>
+    <title>标注面板</title>
     <script src="../js/config.js"></script>
     <script src='../js/jquery.min.js'></script>
     <script src='../js/draw.js'></script>
@@ -464,18 +464,18 @@
          class='border_nochoose' title='橡皮擦'/><br/>
     <img id="chooseSize" src='images/draw/line_size_1.png' width='20px;' height='20px;' class="img"
          onclick="showLineSize(this)" class='border_nochoose' title='线条大小'/><br/>
-    <img src='images/draw/xx.png' width='20px;' height='20px;' class="img" onclick="clearContext('1')"
+   <!-- <img src='images/draw/xx.png' width='20px;' height='20px;' class="img" onclick="clearContext('1')"
          class='border_nochoose' title='清屏'/><br/>
     <img src='images/draw/save.png' width='20px;' height='20px;' class="img" onclick="downloadImage(this);"
-         class='border_nochoose' title='保存'/><br/>
+         class='border_nochoose' title='保存'/><br/>-->
     <!--<input type="button" width='20px;' value="T" height='20px;' class="img" onclick="showFontSize(this);"
            class='border_nochoose' title='选择文字大小'/><br/>
     <img src='images/draw/keyin.png' width='20px;' height='20px;' class="img" onclick="changeInputType(this,1);"
          class='border_nochoose' title='输入'/><br/>-->
 
-    <img src='images/draw/ok.png' width='20px;' height='20px;' class="img" class='border_nochoose' onclick="Ok(this)"
+  <!--  <img src='images/draw/ok.png' width='20px;' height='20px;' class="img" class='border_nochoose' onclick="Ok(this)"
          title='没故障'/>
-    <br/>
+    <br/>-->
 </div>
 
 
@@ -485,7 +485,7 @@
     <input name="sex" type="radio">女
 </div>-->
 
-<div style="float:left;width:30%;top: 20px; position: absolute;" onclick="hide();">
+<div style="float:left;width:30%;top: 20px; position: absolute;left: 50%;margin-left: -550px;" onclick="hide();">
     <div id="dedit" class="box">
     </div>
     <div id="container" >
@@ -535,12 +535,25 @@
 <div class="position" ></div>
 
 <div class="layui-row" style="margin-bottom: 30px;    margin-top: 650px;">
+
     <div class="layui-col-xs2" style="text-align: right">
-        <div class="layui-btn preview">上一张</div>
+        <div class="layui-btn  preview">上一张</div>
     </div>
 
-    <div class="layui-col-xs8" style="text-align: right">
-        <div class="layui-btn next">下一张</div>
+    <div class="layui-col-xs2" style="text-align: right">
+        <div class="layui-btn  layui-btn-normal " onclick="downloadImage(this);" >保存</div>
+    </div>
+
+    <div class="layui-col-xs2" style="text-align: right">
+        <div class="layui-btn   layui-btn-normal" onclick="Ok(this)" style='background-color: rgba(0, 204, 102, 1);'>没故障</div>
+    </div>
+
+    <div class="layui-col-xs2" style="text-align: right">
+        <div class="layui-btn layui-btn-warm  layui-btn-normal" onclick="clearContext('1')">清屏</div>
+    </div>
+
+    <div class="layui-col-xs2" style="text-align: right">
+        <div class="layui-btn  next">下一张</div>
     </div>
 
 </div>

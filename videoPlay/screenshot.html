@@ -138,6 +138,8 @@
             if (Cookies.getJSON('pathInfo')) {
                 //默认监听了行数和列数
                 var filePath = Cookies.getJSON('pathInfo').path1All;
+                // console.log(filePath);
+
                 data.field.folderName = filePath + folderName;
 
             } else {
@@ -159,8 +161,9 @@
                     SetCookie('win1','opened');
                 }*/
 
+            console.log(data.field);
 
-            $.ajax({
+          /*  $.ajax({
                 contentType: 'application/json',
                 headers: {'loginToken': loginToken},
                 type: "post",
@@ -178,10 +181,10 @@
                     if (data.status === 1) {
                         layer.msg('保存成功');
                         layer.close(loadindex);
-                        if (window != top) {
+                       /!* if (window != top) {
                             top.open(`../annotationList/annotationList.html?mainid=${data.data}`, 'win1');
                             // top.location.href='../annotationList/annotationList.html'
-                        }
+                        }*!/
                     } else {
                         if (data.message === "权限错误") {
                             layer.msg("登陆过期或该账号已在其他地方登录");
@@ -200,7 +203,7 @@
                     layer.close(loadindex);
                 }
 
-            });
+            });*/
             return false;
         });
     });

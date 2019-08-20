@@ -14,7 +14,16 @@
         document.write(` <link rel="stylesheet" href="./css/common.css?version=${Math.random()}">`);
         document.write(` <link rel="stylesheet" href="./css/index.css?version=${Math.random()}" media="all">`);
     </script>
+    <style>
+        html{
+            -moz-user-select: none; /*火狐*/
+            -webkit-user-select: none;  /*webkit浏览器*/
+            -ms-user-select: none;   /*IE10*/
+            -khtml-user-select: none; /*早期浏览器*/
+            user-select: none;
+        }
 
+    </style>
 </head>
 
 <body class="layui-layout-body">
