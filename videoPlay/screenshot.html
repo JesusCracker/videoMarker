@@ -64,11 +64,11 @@
     if (Cookies.get('rowCol')) {
         rowCol = Cookies.getJSON('rowCol');
         if (rowCol) {
-            //行数默认每次是上一次的值-1；列数保存上一次的状态
+            //行数默认每次是上一次的值+1；列数保存上一次的状态
             rowNum = parseInt(rowCol.rowNo);
             colNum = parseInt(rowCol.colNo);
             //行数最小值是1
-            if (rowNum == 1) {
+            if (rowNum < 1) {
                 $('.rowNo').val(rowNum);
                 $('.colNo').val(colNum);
             }
