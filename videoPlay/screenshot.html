@@ -60,35 +60,79 @@
 
 <script>
     //设置默认值
-    let rowCol = {}, rowNum = 0, colNum = 0;
-    if (Cookies.get('rowCol')) {
-        rowCol = Cookies.getJSON('rowCol');
-        if (rowCol) {
-            //行数默认每次是上一次的值+1；列数保存上一次的状态
-            rowNum = parseInt(rowCol.rowNo);
-            colNum = parseInt(rowCol.colNo);
-            //行数最小值是1
-            if (rowNum < 1) {
-                $('.rowNo').val(rowNum);
-                $('.colNo').val(colNum);
+    let rowCol = {} , rowNum = 0 , colNum = 0;
+
+    $.ajax({
+        type: "post" ,
+        async: false ,
+        contentType: 'application/json' ,
+        url: publicUrl + "/user/userFilePath.do" ,
+        headers: {"loginToken": loginToken} ,
+        dataType: "json" ,
+
+        success: function (res) {
+            if (res.status == 2 && res.message == '权限错误') {
+                parent_tuichu()
             }
-            else {
-                $('.rowNo').val(rowNum + 1);
-                $('.colNo').val(colNum);
+            if (res.status == 1) {
+                let datas = res.data;
+                console.dir(datas);
+                if (datas.colNo && datas.rowNo) {
+
+                    //行数默认每次是上一次的值+1；列数保存上一次的状态
+                    rowNum = parseInt(datas.rowNo);
+                    colNum = parseInt(datas.colNo);
+                    //行数最小值是1
+                    if (rowNum < 1) {
+                        $('.rowNo').val(rowNum);
+                        $('.colNo').val(colNum);
+                    } else {
+                        $('.rowNo').val(rowNum + 1);
+                        $('.colNo').val(colNum);
+
+                    }
+                } else {
+                    layer.msg('请先设置路径(盘符路径都不为空)' , {icon: 5 , time: 2000});
+                    return false;
+                }
             }
+
+        } ,
+        error: function (res) {
+
         }
-    }
+    });
+
+    /*  if (Cookies.get('rowCol')) {
+          rowCol = Cookies.getJSON('rowCol');
+          if (rowCol) {
+              //行数默认每次是上一次的值+1；列数保存上一次的状态
+              rowNum = parseInt(rowCol.rowNo);
+              colNum = parseInt(rowCol.colNo);
+              //行数最小值是1
+              if (rowNum < 1) {
+                  $('.rowNo').val(rowNum);
+                  $('.colNo').val(colNum);
+              }
+              else {
+                  $('.rowNo').val(rowNum + 1);
+                  $('.colNo').val(colNum);
+              }
+          }
+      }*/
 
 
     $('.reset').click(function () {
-        Cookies.remove('rowCol');
+        $('.rowNo').val('');
+        $('.colNo').val('');
+        form.render();
     });
 
     //获取截取的base64图片
-    var base64Source, screenShotTime = 0;
+    var base64Source , screenShotTime = 0;
     if (localStorage.getItem('base64IMG')) {
         base64Source = localStorage.getItem('base64IMG');
-        $('#anoationIMG').attr('src', base64Source);
+        $('#anoationIMG').attr('src' , base64Source);
     }
     if (localStorage.getItem('screenShot')) {
         screenShotTime = localStorage.getItem('screenShot').toString();
@@ -102,7 +146,7 @@
         return null; //返回参数值
     }
 
-    function SetCookie(sName, sValue) {
+    function SetCookie(sName , sValue) {
         document.cookie = sName + "=" + escape(sValue) + ";";
     }
 
@@ -124,28 +168,82 @@
     var folderName = getUrlParam('folderName');
 
     var loadindex = 0;
-    layui.use('form', function () {
+    layui.use('form' , function () {
         var form = layui.form;
 
         //监听提交
-        form.on('submit(submit)', function (data) {
-
-
+        form.on('submit(submit)' , function (data) {
             //存储当次的行列数
-            Cookies.set('rowCol', JSON.stringify(data.field));
+            $.ajax({
+                type: "post" ,
+                async: false ,
+                contentType: 'application/json' ,
+                url: publicUrl + "/user/saveUserFilePath.do" ,
+                headers: {"loginToken": loginToken} ,
+                dataType: "json" ,
+                data: JSON.stringify(data.field) ,
+                success: function (res) {
+                    if (res.status == 2 && res.message == '权限错误') {
+                        parent_tuichu()
+                    }
+                    if (res.status == 1) {
+                        layer.msg('保存成功' , {icon: 1 , time: 1000});
+
+                        $.ajax({
+                            type: "post" ,
+                            async: false ,
+                            contentType: 'application/json' ,
+                            url: publicUrl + "/user/userFilePath.do" ,
+                            headers: {"loginToken": loginToken} ,
+                            dataType: "json" ,
+
+                            success: function (res) {
+                                if (res.status == 2 && res.message == '权限错误') {
+                                    parent_tuichu()
+                                }
+                                if (res.status == 1) {
+                                    let datas = res.data;
+                                    console.dir(datas);
+                                    if (datas.detailedPath && datas.driveLetter) {
+                                        data.field.folderName = datas.detailedPath + datas.driveLetter;
+                                    } else {
+                                        layer.msg('请先设置路径(盘符路径都不为空)' , {icon: 5 , time: 2000});
+                                        return false;
+                                    }
+                                }
+
+                            } ,
+                            error: function (res) {
+
+                            }
+                        });
 
 
-            if (Cookies.getJSON('pathInfo')) {
-                //默认监听了行数和列数
-                var filePath = Cookies.getJSON('pathInfo').path1All;
-                // console.log(filePath);
+                    }
 
-                data.field.folderName = filePath + folderName;
+                } ,
+                error: function (res) {
 
-            } else {
-                layer.msg('请先设置路径', {icon: 5, time: 2000});
-                return false;
-            }
+                }
+            });
+
+
+            // Cookies.set('rowCol', JSON.stringify(data.field));
+
+            // console.log(JSON.stringify(data.field));
+
+
+            /*   if (Cookies.getJSON('pathInfo')) {
+                   //默认监听了行数和列数
+                   var filePath = Cookies.getJSON('pathInfo').path1All;
+
+
+                   data.field.folderName = filePath + folderName;
+
+               } else {
+                   layer.msg('请先设置路径', {icon: 5, time: 2000});
+                   return false;
+               }*/
             data.field.taskName = folderName;
             data.field.originalImg = base64Source;
             data.field.location = screenShotTime;
@@ -164,40 +262,40 @@
             // console.log(data.field);
 
             $.ajax({
-                contentType: 'application/json',
-                headers: {'loginToken': loginToken},
-                type: "post",
-                url: publicUrl + '/videomana/screenshot.do',
-                async: true,
-                data: JSON.stringify(data.field),
-                dataType: 'json',
+                contentType: 'application/json' ,
+                headers: {'loginToken': loginToken} ,
+                type: "post" ,
+                url: publicUrl + '/videomana/screenshot.do' ,
+                async: true ,
+                data: JSON.stringify(data.field) ,
+                dataType: 'json' ,
 
 
                 beforeSend: function () {
                     loadindex = layer.load(1);  //上传loading
-                },
+                } ,
                 success: function (data) {
                     // debugger;
                     if (data.status === 1) {
                         layer.msg('保存成功');
                         layer.close(loadindex);
-                       /* if (window != top) {
-                            top.open(`../annotationList/annotationList.html?mainid=${data.data}`, 'win1');
-                            // top.location.href='../annotationList/annotationList.html'
-                        }*/
+                        /* if (window != top) {
+                             top.open(`../annotationList/annotationList.html?mainid=${data.data}`, 'win1');
+                             // top.location.href='../annotationList/annotationList.html'
+                         }*/
                     } else {
                         if (data.message === "权限错误") {
                             layer.msg("登陆过期或该账号已在其他地方登录");
-                            setTimeout("tuichu()", 2000);
+                            setTimeout("tuichu()" , 2000);
                             return false;
                         }
                         layer.msg(data.message);
                         layer.close(loadindex);
                     }
-                },
+                } ,
                 done: function () {
                     layer.close(loadindex);
-                },
+                } ,
                 error: function (data) {
                     layer.msg('网络异常');
                     layer.close(loadindex);
