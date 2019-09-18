@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>设置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+    <style>
+        .demo-slider {
+            margin: 45px 30px;
+            width: 40%;
+        }
+    </style>
+</head>
+<body style="padding:10px;background: #fff;">
+
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+    <legend>设置blurValue</legend>
+</fieldset>
+<div id="setBlurValue" class="demo-slider"></div>
+
+
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+    <legend>设置insideDown</legend>
+</fieldset>
+<div id="setInsideDown_R" class="demo-slider"></div>
+<div id="setInsideDown_G" class="demo-slider"></div>
+<div id="setInsideDown_B" class="demo-slider"></div>
+
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+    <legend>设置insideUp</legend>
+</fieldset>
+<div id="setInsideUp_R" class="demo-slider"></div>
+<div id="setInsideUp_G" class="demo-slider"></div>
+<div id="setInsideUp_B" class="demo-slider"></div>
+
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+    <legend>设置outlineDown</legend>
+</fieldset>
+<div id="setOutlineDown_R" class="demo-slider"></div>
+<div id="setOutlineDown_G" class="demo-slider"></div>
+<div id="setOutlineDown_B" class="demo-slider"></div>
+
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+    <legend>设置outlineUp</legend>
+</fieldset>
+<div id="setOutlineUp_R" class="demo-slider"></div>
+<div id="setOutlineUp_G" class="demo-slider"></div>
+<div id="setOutlineUp_B" class="demo-slider"></div>
+
+<div style="display: flex;align-items: center;justify-content: center;">
+    <button type="button" class="layui-btn layui-btn-normal confirm">确认</button>
+</div>
+
+
+<script src="../js/config.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../layui/layui.js"></script>
+
+<script>
+    layui.use(['slider','layer'], function(){
+        var $ = layui.$
+            ,slider = layui.slider
+            ,layer=layui.layer
+        ;
+        //如果已存储参数，将已有参数显示到页面上
+        $.ajax({
+            type: "post" ,
+            async: false ,
+            contentType: 'application/json' ,
+            url: publicUrl + "/user/userFilePath.do" ,
+            headers: {"loginToken": loginToken} ,
+            dataType: "json" ,
+            success: function (res) {
+                if (res.status == 2 && res.message == '权限错误') {
+                    parent_tuichu()
+                }
+                if (res.status == 1) {
+                    let data = res.data;
+                    pathInfo = data
+                    if (pathInfo) {
+                        param=pathInfo;
+                        console.dir(param);
+                        //设置blurValue值
+                        slider.render({
+                            elem: '#setBlurValue'
+                            ,value:param.blurValue?param.blurValue:0
+                            ,min: 0 //最小值
+                            ,max: 50 //最大值
+                            ,step:1//步长
+                            ,input: true //输入框
+                        });
+
+                        //设置setInsideDown_R值
+                        slider.render({
+                            elem: '#setInsideDown_R'
+                            ,value:param.insideDown_R?param.insideDown_R:0
+                            ,min: 0 //最小值
+                            ,max: 255 //最大值
+                            ,step:1//步长
+                            ,input: true //输入框
+
+                        });
+                        //设置setInsideDown_G值
+                        slider.render({
+                            elem: '#setInsideDown_G'
+                            ,value:param.insideDown_G?param.insideDown_G:0
+                            ,min: 0 //最小值
+                            ,max: 255 //最大值
+                            ,step:1//步长
+                            ,input: true //输入框
+
+                        });
+                        //设置setInsideDown_B值
+                        slider.render({
+                            elem: '#setInsideDown_B'
+                            ,value:param.insideDown_B?param.insideDown_B:0
+                            ,min: 0 //最小值
+                            ,max: 255 //最大值
+                            ,step:1//步长
+                            ,input: true //输入框
+                        });
+                        //设置setInsideUp_R值
+                        slider.render({
+                            elem: '#setInsideUp_R'
+                            ,value:param.insideUp_R?param.insideUp_R:0
+                            ,min: 0 //最小值
+                            ,max: 255 //最大值
+                            ,step:1//步长
+                            ,input: true //输入框
+                        });
+                        //设置setInsideUp_G值
+                        slider.render({
+                            elem: '#setInsideUp_G'
+                            ,value:param.insideUp_G?param.insideUp_G:0
+                            ,min: 0 //最小值
+                            ,max: 255 //最大值
+                            ,step:1//步长
+                            ,input: true //输入框
+                        });
+                        //设置setInsideUp_B值
+                        slider.render({
+                            elem: '#setInsideUp_B'
+                            ,value:param.insideUp_B?param.insideUp_B:0
+                            ,min: 0 //最小值
+                            ,max: 255 //最大值
+                            ,step:1//步长
+                            ,input: true //输入框
+                        });
+
+                        //设置setOutlineDown_R值
+                        slider.render({
+                            elem: '#setOutlineDown_R'
+                            ,value:param.outlineDown_R?param.outlineDown_R:0
+                            ,min: 0 //最小值
+                            ,max: 255 //最大值
+                            ,step:1//步长
+                            ,input: true //输入框
+                        });
+                        //设置setOutlineDown_G值
+                        slider.render({
+                            elem: '#setOutlineDown_G'
+                            ,value:param.outlineDown_G?param.outlineDown_G:0
+                            ,min: 0 //最小值
+                            ,max: 255 //最大值
+                            ,step:1//步长
+                            ,input: true //输入框
+                        });
+                        //设置setOutlineDown_B值
+                        slider.render({
+                            elem: '#setOutlineDown_B'
+                            ,value:param.outlineDown_B?param.outlineDown_B:0
+                            ,min: 0 //最小值
+                            ,max: 255 //最大值
+                            ,step:1//步长
+                            ,input: true //输入框
+                        });
+
+                        //设置setOutlineUp_R值
+                        slider.render({
+                            elem: '#setOutlineUp_R'
+                            ,value:param.outlineUp_R?param.outlineUp_R:0
+                            ,min: 0 //最小值
+                            ,max: 255 //最大值
+                            ,step:1//步长
+                            ,input: true //输入框
+                        });
+                        //设置setOutlineUp_G值
+                        slider.render({
+                            elem: '#setOutlineUp_G'
+                            ,value:param.outlineUp_G?param.outlineUp_G:0
+                            ,min: 0 //最小值
+                            ,max: 255 //最大值
+                            ,step:1//步长
+                            ,input: true //输入框
+                        });
+                        //设置setOutlineUp_B值
+                        slider.render({
+                            elem: '#setOutlineUp_B'
+                            ,value:param.outlineUp_B?param.outlineUp_B:0
+                            ,min: 0 //最小值
+                            ,max: 255 //最大值
+                            ,step:1//步长
+                            ,input: true //输入框
+
+                        });
+
+                    }
+
+                }
+
+            } ,
+            error: function (res) {
+
+            }
+        });
+
+
+        const params={
+            blurValue:'',
+            insideDown_R:'',
+            insideDown_G:'',
+            insideDown_B:'',
+            insideUp_R:'',
+            insideUp_G:'',
+            insideUp_B:'',
+            outlineDown_R:'',
+            outlineDown_G:'',
+            outlineDown_B:'',
+            outlineUp_R:'',
+            outlineUp_G:'',
+            outlineUp_B:'',
+        };
+
+
+
+
+        $('.confirm').click(()=>{
+            //获取所有滑块的值
+            let blurVal=parseInt($('#setBlurValue').text())||0;
+            let insideDwn_R=parseInt($('#setInsideDown_R').text())||0,
+                insideDwn_G=parseInt($('#setInsideDown_G').text())||0,
+                insideDwn_B=parseInt($('#setInsideDown_B').text())||0,
+                insideU_R=parseInt($('#setInsideUp_R').text())||0,
+                insideU_G=parseInt($('#setInsideUp_G').text())||0,
+                insideU_B=parseInt($('#setInsideUp_B').text())||0,
+                outlineDwn_R=parseInt($('#setOutlineDown_R').text())||0,
+                outlineDwn_G=parseInt($('#setOutlineDown_G').text())||0,
+                outlineDwn_B=parseInt($('#setOutlineDown_B').text())||0,
+                outlineU_R=parseInt($('#setOutlineUp_R').text())||0,
+                outlineU_G=parseInt($('#setOutlineUp_G').text())||0,
+                outlineU_B=parseInt($('#setOutlineUp_B').text())||0;
+            //blurValue
+            params.blurValue=blurVal,
+            //insideDown
+            params.insideDown_R=insideDwn_R,
+            params.insideDown_G=insideDwn_G,
+            params.insideDown_B=insideDwn_B,
+            //insideUp
+            params.insideUp_R=insideU_R,
+            params.insideUp_G=insideU_G,
+            params.insideUp_B=insideU_B,
+            //outlineDown
+            params.outlineDown_R=outlineDwn_R,
+            params.outlineDown_G=outlineDwn_G,
+            params.outlineDown_B=outlineDwn_B,
+            //outlineUp
+            params.outlineUp_R=outlineU_R,
+            params.outlineUp_G=outlineU_G,
+            params.outlineUp_B=outlineU_B
+            //存储当前的设置选项
+
+
+            $.ajax({
+                type: "post" ,
+                async: true ,
+                contentType: 'application/json' ,
+                url: publicUrl + "/user/saveUserFilePath.do" ,
+                headers: {"loginToken": loginToken} ,
+                dataType: "json" ,
+                data: JSON.stringify(params) ,
+                success: function (res) {
+                    if (res.status == 2 && res.message == '权限错误') {
+                        parent_tuichu()
+                    }
+                    if (res.status == 1) {
+                        layer.msg('保存成功' , {icon: 1 , time: 1000});
+                    }
+
+                } ,
+                error: function (res) {
+
+                }
+            });
+
+        })
+
+
+
+
+    });
+</script>
+
+</body>
+</html>
