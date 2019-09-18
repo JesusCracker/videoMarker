@@ -24,6 +24,21 @@
             display: inline;
             overflow: hidden;
         }
+        .video1.videos {
+            height: 100%;
+        }
+        .video2.videos {
+            height: 100%;
+        }
+        .video3.videos {
+            height: 100%;
+        }
+        .video4.videos {
+            height: 100%;
+        }
+        .video5.videos {
+            height: 100%;
+        }
     </style>
 </head>
 <body>
@@ -32,13 +47,13 @@
 <div class="layui-fluid" id="screenHeight">
 
     <div class="layui-row" style="height: 90%">
-        <div class="layui-col-xs6" style="height: 95%;background-image: url(../img/videoPause.png); background-repeat: no-repeat;background-position: 50%;
-    background-size:auto 100%;margin-top: 0.5%">
+        <div class="layui-col-xs6" style="height:100%;background-image: url(../img/videoPause.png); background-repeat: no-repeat;background-position: 50%;
+    background-size:auto 100%;">
             <div class="video1 videos">
                 <!--video1-->
             </div>
         </div>
-        <div class="layui-col-xs6" style="height: 95%;margin-top: 0.5%;">
+        <div class="layui-col-xs6" style="height: 100%;">
 
             <div class="layui-row" style="height: 50%;">
                 <div class="layui-col-xs6" style="height: 100%;background-image: url(../img/videoPause.png);
@@ -166,32 +181,32 @@
              </video>`;
              }*/
 
-        $('.video1').append(`<video id="my-video0"  src=${blobb[0]} type="video/webm" class="video-js" controls preload="auto"   data-setup="{}" style="object-fit: fill;">
+        $('.video1').append(`<video id="my-video0"  src=${blobb[0]} type="video/webm" class="video-js" controls preload="auto"   data-setup="{}" >
 			<source>
 			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
 		</video>`);
-        $('.video2').append(`<video id="my-video1" src=${blobb[1]} type="video/mp4" class="video-js"  controls preload="auto" width="360" height="120" data-setup="{}"  style="object-fit: fill;">
+        $('.video2').append(`<video id="my-video1" src=${blobb[1]} type="video/mp4" class="video-js"  controls preload="auto" width="360" height="120" data-setup="{}"  >
 			<source >
 			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
 		</video>`);
-        $('.video3').append(`<video id="my-video2" src=${blobb[2]} type="video/mp4" class="video-js"  controls preload="auto" width="360" height="120" data-setup="{}"  style="object-fit: fill;">
+        $('.video3').append(`<video id="my-video2" src=${blobb[2]} type="video/mp4" class="video-js"  controls preload="auto" width="360" height="120" data-setup="{}"  >
 			<source >
 			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
 		</video>`);
-        $('.video4').append(`<video id="my-video3" src=${blobb[3]} type="video/mp4" class="video-js" controls preload="auto" width="360" height="120" data-setup="{}"  style="object-fit: fill;">
+        $('.video4').append(`<video id="my-video3" src=${blobb[3]} type="video/mp4" class="video-js" controls preload="auto" width="360" height="120" data-setup="{}"  >
 			<source >
 			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
 		</video>`);
-        $('.video5').append(`<video id="my-video4" src=${blobb[4]} type="video/mp4" class="video-js" controls preload="auto" width="360" height="120" data-setup="{}"  style="object-fit: fill;">
+        $('.video5').append(`<video id="my-video4" src=${blobb[4]} type="video/mp4" class="video-js" controls preload="auto" width="360" height="120" data-setup="{}"  >
 			<source >
 			<p class="vjs-no-js"> To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
 		</video>`);
 
-        $('#my-video0').css('height', screenHeight * 0.863 + 'px').css('width', '100%');
-        $('#my-video1').css('height', screenHeight * 0.87 * 0.5 + 'px').css('width', '100%');
-        $('#my-video2').css('height', screenHeight * 0.87 * 0.5 + 'px').css('width', '100%');
-        $('#my-video3').css('height', screenHeight * 0.87 * 0.5 + 'px').css('width', '100%');
-        $('#my-video4').css('height', screenHeight * 0.87 * 0.5 + 'px').css('width', '100%');
+        $('#my-video0').css('height', '100%').css('width', '100%');
+        $('#my-video1').css('height', '100%').css('width', '100%');
+        $('#my-video2').css('height', '100%').css('width', '100%');
+        $('#my-video3').css('height', '100%').css('width', '100%');
+        $('#my-video4').css('height', '100%').css('width', '100%');
 
 
         //	监听播放时间
@@ -245,14 +260,14 @@
         }
         var canvas = document.createElement("canvas");
         var ctx = canvas.getContext("2d");
-        canvas.width = 1100;
-        canvas.height = 600;
+        canvas.width = 640;
+        canvas.height = 480;
 
         var image = new Image();
 
         image.setAttribute("crossOrigin", "Anonymous");
         image.setAttribute("class", "red_img");
-        ctx.drawImage(video, 0, 0, 1100, 600);
+        ctx.drawImage(video, 0, 0, 640, 480);
         image.src = canvas.toDataURL("image/png", 1.0);
         localStorage.setItem('base64IMG', image.src);
 

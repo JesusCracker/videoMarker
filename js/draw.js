@@ -5,8 +5,8 @@ var context ;
 var canvas_bak;
 var context_bak;
 
-var canvasWidth = 1100;
-var canvasHeight = 600;
+var canvasWidth = 640;
+var canvasHeight = 480;
 
 var canvasTop;
 var canvasLeft;
