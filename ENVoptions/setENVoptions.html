@@ -239,19 +239,22 @@
 
         $('.confirm').click(()=>{
             //获取所有滑块的值
-            let blurVal=parseInt($('#setBlurValue').text())||0;
-            let insideDwn_R=parseInt($('#setInsideDown_R').text())||0,
-                insideDwn_G=parseInt($('#setInsideDown_G').text())||0,
-                insideDwn_B=parseInt($('#setInsideDown_B').text())||0,
-                insideU_R=parseInt($('#setInsideUp_R').text())||0,
-                insideU_G=parseInt($('#setInsideUp_G').text())||0,
-                insideU_B=parseInt($('#setInsideUp_B').text())||0,
-                outlineDwn_R=parseInt($('#setOutlineDown_R').text())||0,
-                outlineDwn_G=parseInt($('#setOutlineDown_G').text())||0,
-                outlineDwn_B=parseInt($('#setOutlineDown_B').text())||0,
-                outlineU_R=parseInt($('#setOutlineUp_R').text())||0,
-                outlineU_G=parseInt($('#setOutlineUp_G').text())||0,
-                outlineU_B=parseInt($('#setOutlineUp_B').text())||0;
+            let blurVal=parseInt($('#setBlurValue').text());
+            let insideDwn_R=parseInt($('#setInsideDown_R').text()),
+                insideDwn_G=parseInt($('#setInsideDown_G').text()),
+                insideDwn_B=parseInt($('#setInsideDown_B').text()),
+                insideU_R=parseInt($('#setInsideUp_R').text()),
+                insideU_G=parseInt($('#setInsideUp_G').text()),
+                insideU_B=parseInt($('#setInsideUp_B').text()),
+                outlineDwn_R=parseInt($('#setOutlineDown_R').text()),
+                outlineDwn_G=parseInt($('#setOutlineDown_G').text()),
+                outlineDwn_B=parseInt($('#setOutlineDown_B').text()),
+                outlineU_R=parseInt($('#setOutlineUp_R').text()),
+                outlineU_G=parseInt($('#setOutlineUp_G').text()),
+                outlineU_B=parseInt($('#setOutlineUp_B').text());
+            if(isNaN(blurVal)&&isNaN(insideDwn_R)&&isNaN(insideDwn_G)&&isNaN(insideDwn_B)&&isNaN(insideU_R)&&isNaN(insideU_G)&&isNaN(insideU_B)&&isNaN(outlineDwn_R)&&isNaN(outlineDwn_G)&&isNaN(outlineDwn_B)&&isNaN(outlineU_R)&&isNaN(outlineU_G)&&isNaN(outlineU_B)){
+                layer.msg('参数未改变' , {icon: 6 , time: 1000});
+            }
             //blurValue
             params.blurValue=blurVal,
             //insideDown
@@ -272,6 +275,8 @@
             params.outlineUp_B=outlineU_B
             //存储当前的设置选项
 
+
+            console.dir(params);
 
             $.ajax({
                 type: "post" ,
