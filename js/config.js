@@ -1,6 +1,6 @@
 // JavaScript source code
-const publicUrl = "http://www.aisono.cn/videoAnal";
-const imgUrl='http://www.aisono.cn/fileupload';
+const publicUrl = "http://www.aisono.cn:18081/videoAnal";
+const imgUrl='http://www.aisono.cn:18081/fileupload';
 // const filePath=Cookies.getJSON('pathInfo');
 
 
